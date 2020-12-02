@@ -224,6 +224,7 @@ def default_show_package_schema(
     schema['maintainer'] = []
     schema['maintainer_email'] = []
     schema['license_id'] = []
+    
     schema['notes'] = []
     schema['url'] = []
     schema['version'] = []

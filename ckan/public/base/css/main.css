@@ -2724,7 +2724,7 @@ textarea.form-control {
   }
 }
 .form-group {
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 .radio,
 .checkbox {
@@ -2742,7 +2742,7 @@ fieldset[disabled] .checkbox label {
 .radio label,
 .checkbox label {
   min-height: 20px;
-  padding-left: 20px;
+  padding-left: 0px;
   margin-bottom: 0;
   font-weight: 400;
   cursor: pointer;
@@ -7611,6 +7611,7 @@ textarea {
   box-sizing: border-box;
   height: auto;
   width: 100%;
+  
 }
 .control-large input {
   height: 46px;

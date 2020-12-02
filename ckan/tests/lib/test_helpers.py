@@ -449,7 +449,7 @@ class TestHelpersRemoveLineBreaks(object):
 
 class TestLicenseOptions(object):
     def test_includes_existing_license(self):
-        licenses = h.license_options("some-old-license")
+        licenses = h.s("some-old-license")
         assert dict(licenses)["some-old-license"] == "some-old-license"
         # and it is first on the list
         assert licenses[0][0] == "some-old-license"

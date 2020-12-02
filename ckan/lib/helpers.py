@@ -16,6 +16,7 @@ import pprint
 import copy
 import uuid
 
+
 from paste.deploy import converters
 
 import dominate.tags as dom_tags
@@ -27,6 +28,7 @@ from flask import _request_ctx_stack
 from flask import url_for as _flask_default_url_for
 from werkzeug.routing import BuildError as FlaskRouteBuildError
 from ckan.lib import i18n
+
 
 import six
 from six import string_types, text_type
@@ -2750,7 +2752,6 @@ def license_options(existing_license_id=None):
          register[license_id].title if license_id in register else license_id)
         for license_id in license_ids]
 
-
 @core_helper
 def get_translated(data_dict, field):
     language = i18n.get_lang()
@@ -2760,6 +2761,21 @@ def get_translated(data_dict, field):
         val = data_dict.get(field, '')
         return _(val) if val and isinstance(val, string_types) else val
 
+@core_helper
+def program_list():
+    programs = ['Program1', 'Program2', 'Program3', 'Program4']
+    return programs
+
+@core_helper
+def project_no():
+    projects = ['Project1', 'Project2', 'Project3', 'Project4', 'Project5', 'Project6', 'Project7']
+    return projects
+@core_helper
+def milestone():
+    milestones = ['Milestone 1', 'Milestone 2', 'Milestone 3', 'Milestone 4', 'Milestone 5', 'Milestone 6', 'Milestone 7']
+    return milestones
+
+    
 
 @core_helper
 def facets():

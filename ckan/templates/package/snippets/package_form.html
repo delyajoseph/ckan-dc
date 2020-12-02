@@ -62,7 +62,7 @@ then itself be extended to add/remove blocks of functionality. #}
   {% block basic_fields_dcm %}
   {{ form.markdown('dcm', id='field-dcm', label=_('Data collection Methdology'), placeholder=_('Brief about data collection methodology'), value=data.dcm, error=errors.dcm, classes=['control-full']) }}
   {% endblock %}
-  {% block basic_fields_dqam %}
+  {% block basic_fields_  %}
   {{ form.markdown('dqam', id='field-dqam', label=_('Data QA or QC methodology'), placeholder=_('Brief about data QA or QC methodology'), value=data.dqam, error=errors.dqam, classes=['control-full']) }}
   {% endblock %}
   {% block basic_fields_dataType %}
@@ -84,32 +84,52 @@ then itself be extended to add/remove blocks of functionality. #}
   </div>
   <div class="dataType">
     <input type="text" style="width:100%"  hidden="true" id="datatype">
-    <!--<input type="text" style="width:100%"  hidden = "true" id="generic" name="generic" placeholder="Description">
-    <input type="text" style="width:100%" hidden = "true" id="software" name="softwareSpecific" placeholder="Write specifications">
-    <input type="text" style="width:100%" hidden = "true" id="prop" name="prop" placeholder="Share the data format and description">-->
+    
   </div>
 
 
   {% endblock %}
+
   {% block basic_fields_version %}
   {{ form.input('version', id='field-version', label=_('Data Version'), placeholder=_('Eg: 1 or 1.1 etc'), value=data.version, error=errors.version, classes=['control-full']) }}
   {% endblock %}
+
   {% block basic_fields_storage %}
   <div>
     <label style="padding-top:5px">Data Storage Location</label>
   </div>
-  <div style="display:inline;padding-bottom: 10px;">
-    <input type="radio" id="cloud" name="storage" value="cloud">
-    <label style="font-weight: lighter;" for="cloud">Cloud</label>
+ 
+  
+    <div class ="radio" style = "display: inline;">
+   
+    {% set existing_storage = data.get('storage') %}
+
+   
+    {% if existing_storage == 'cloud' %}
+      {{ h.radio('storage', 'cloud', true) }} 
+    {% else %}
+      {{ h.radio('storage', 'cloud', false) }}
+    {% endif %}
+    <label>Cloud</label>
+    {% if existing_storage == 'desktop' %}
+      {{ h.radio('storage', 'desktop', true) }} 
+    {% else %}
+      {{ h.radio('storage', 'desktop', false) }}
+    {% endif %}
+    <label>Desktop</label>
+
+    {% if existing_storage == 'organisation' %}
+      {{ h.radio('storage', 'organisation', true) }} 
+    {% else %}
+      {{ h.radio('storage', 'organisation', false) }}
+    {% endif %}
+    <label>Organisation</label>
+   
+    
+   
   </div>
-  <div style="display:inline">
-    <input type="radio" id="desktop" name="storage" value="desktop">
-    <label tyle="font-weight: lighter;" for="desktop">Desktop</label>
-  </div>
-  <div style="display:inline">
-    <input type="radio" id="organisation" name="storage" value="organisation">
-    <label tyle="font-weight: lighter;" for="organisation" >Organisation</label> 
-  </div>
+  
+  
   {% endblock %}
 
 
@@ -224,7 +244,3 @@ then itself be extended to add/remove blocks of functionality. #}
   </div>
   <script src="/ext-script.js" type="text/javascript"></script> 
 </form>
-
-
- 
-  
