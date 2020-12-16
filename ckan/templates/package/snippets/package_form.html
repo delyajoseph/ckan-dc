@@ -65,30 +65,45 @@ then itself be extended to add/remove blocks of functionality. #}
   {% block basic_fields_  %}
   {{ form.markdown('dqam', id='field-dqam', label=_('Data QA or QC methodology'), placeholder=_('Brief about data QA or QC methodology'), value=data.dqam, error=errors.dqam, classes=['control-full']) }}
   {% endblock %}
+
+
   {% block basic_fields_dataType %}
-
-
   <div>
     <label style="padding-top:5px">Data types</label>
   </div>
-  <div style="display:inline">
-    <input type="radio" id="genericr" name="dataType" value="generic" onclick="show(1)" />Generic
-    
-  </div>
-  <div style="display:inline">
-    <input type="radio" id="softwareSpecificr" name="dataType" value="softwareSpecific" onclick="show(2)" />Software specific
-    
-  </div>
-  <div style="display:inline">
-    <input type="radio" id="propr" name="dataType" value="prop" onclick="show(3)" />Propreitor
-  </div>
-  <div class="dataType">
-    <input type="text" style="width:100%"  hidden="true" id="datatype">
-    
-  </div>
+  
+  {% set existing_dataType = data.get('dataType') %} 
+  {% set existing_dataTypeInfo = data.get('dataTypeInfo') %} 
 
+  <div style="display:inline">
+ 
+    {%  if existing_dataType == 'generic' %}
+    <input type="radio" id="genericr" name="dataType" value="generic" checked onclick="show(1)" />Generic
+    {% else %}
+    <input type="radio" id="genericr" name="dataType" value="generic"  onclick="show(1)" />Generic
+    {% endif %}
+
+
+    {% if existing_dataType == 'softwareSpecific' %}
+    <input type="radio" id="softwareSpecificr" name="dataType" value="softwareSpecific" checked onclick="show(2)" />Software specific
+    {% else %}
+    <input type="radio" id="softwareSpecificr" name="dataType" value="softwareSpecific" onclick="show(2)" />Software specific
+    {% endif %}
+
+
+    {% if existing_dataType == 'prop' %}
+    <input type="radio" id="propr" name="dataType" value="prop" checked onclick="show(3)" />Propreitor
+    {% else %}
+    <input type="radio" id="propr" name="dataType" value="prop"  onclick="show(3)" />Propreitor
+    {% endif %}
+
+    <input type="text" name="dataTypeInfo" style="width:100%" value="{{existing_dataTypeInfo}}" id="datatype">
+  </div> 
+ 
 
   {% endblock %}
+
+  
 
   {% block basic_fields_version %}
   {{ form.input('version', id='field-version', label=_('Data Version'), placeholder=_('Eg: 1 or 1.1 etc'), value=data.version, error=errors.version, classes=['control-full']) }}
@@ -133,7 +148,21 @@ then itself be extended to add/remove blocks of functionality. #}
   {% endblock %}
 
 
-  {% block basic_fields_rights %}
+  {% block package_metadata_fields_visibility %}
+  <div class="form-group control-medium">
+    <label for="field-private" class="control-label">{{ _("Access rights") }}</label>
+    <div class="controls">
+      <select id="field-private" name="private" class="form-control">
+        {% for option in [('True', _('Private')), ('False', _('Public'))] %}
+        <option value="{{ option[0] }}" {% if option[0] == data.private|trim %}selected="selected"{% endif %}>{{ option[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  {% endblock %}
+ 
+{# <!-- {% block basic_fields_rights %}
+
     <div class="form-group">
       {% set error = errors.rights_id %}
       <label class="control-label" style="padding-top: 25px;"for="field-rights">{{ _("Access rights") }}
@@ -155,6 +184,8 @@ then itself be extended to add/remove blocks of functionality. #}
         </div>
   
   {% endblock %}
+--> #}
+
   {% block basic_fields_restrDetails %}
   {{ form.input('restrDetails', id='field-restrDetails', label=_('Restriction details'), placeholder=_('Details about restrictions'), value=data.restrDetails, error=errors.restrDetails, classes=['control-full']) }}
   {% endblock %}
@@ -216,24 +247,53 @@ then itself be extended to add/remove blocks of functionality. #}
 {% endblock %}
 <!------------------------------------------------------------->
 
+{% block basic_fields_keywords %}
 
   <div id="tab4">
     <div id="keywords" class="ckan_keywords">
       <button type="button" value="Add" onclick="add();">Add</button>
-      <div class="row">
-       
+        
+      {% for n in range(3) %}
+      {% set keywordname = 'keyword' + n|string %}
+      {% set keywordbriefname = 'keywordBrief' + n|string %}
+      {% set keyworddiv = 'keywordDiv' + n|string %}
+      {% set keyworddel = 'keywordDel' + n|string %}
+      {% set existing_keyword = data.get(keywordname) %}
+      {% set existing_keywordbrief = data.get(keywordbriefname) %}
+      {% if existing_keyword and existing_keyword is not none and existing_keywordbrief and existing_keywordbrief is not none %}  
+      <div id="{{keyworddiv}}" class="row">
         <div class="col-lg-3">
-          <p>Key word</p>
-          <input id="key1" type="text" placeholder="Enetr Key word" name="keyword" value="" class="form-control">  
+          <p>Keyword</p>
+          <input id="{{keywordname}}" type="text" placeholder="Enter Keyword" name="{{keywordname}}" value="{{existing_keyword}}" class="form-control">  
         </div>
         <div class="col-lg-7">
           <p>Brief</p>
-          
-          <input id="brief1" type="text" placeholder="Enter Brief of the Key word" name="brief" value="" class="form-control">
+        <input id="{{keywordbriefname}}" type="text" placeholder="Enter Brief of the Keyword" name="{{keywordbriefname}}" value="{{existing_keywordbrief}}" class="form-control">
         </div>
+        <div class="col-lg-2">
+          <input type="button" id="{{keyworddel}}" onclick='removeElement({{n | safe}})' value="X" >
+        </div>
+       
       </div>
+      {% else %}
+      <div id="{{keyworddiv}}" class="row" style="display: none;">
+        <div class="col-lg-3">
+          <p>Keyword</p>
+          <input id="{{keywordname}}" type="text" placeholder="Enter Keyword" name="{{keywordname}}" value="" class="form-control">  
+        </div>
+        <div class="col-lg-7">
+          <p>Brief</p>
+        <input id="{{keywordbriefname}}" type="text" placeholder="Enter Brief of the Keyword" name="{{keywordbriefname}}" value="" class="form-control">
+        </div>
+        <div class="col-lg-2">
+          <input type="button" id="{{keyworddel}}" onclick='removeElement({{n | safe}})' value="X" >
+        </div>
+       
+      </div>
+      {% endif %}
+      {% endfor %}
     </div>
-    
+    {% endblock %}   
     
     <div style="overflow:auto;">
       <div style="float:right;">
