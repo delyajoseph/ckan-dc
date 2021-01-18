@@ -204,6 +204,9 @@ def _get_search_details():
 def search(package_type):
     extra_vars = {}
 
+    log.info('###### CKAN dataset.py --- Search by package type which is %s ' , package_type)
+
+
     try:
         context = {
             u'model': model,
@@ -274,8 +277,10 @@ def search(package_type):
     except ValueError:
         search_all = True
 
+    
     if not search_all or package_type != search_all_type:
         # Only show datasets of this particular type
+
         fq += u' +dataset_type:{type}'.format(type=package_type)
 
     facets = OrderedDict()

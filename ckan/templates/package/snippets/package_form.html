@@ -191,30 +191,33 @@ then itself be extended to add/remove blocks of functionality. #}
   {% endblock %}
   
   <div>
-    <label class="control-label" for="ownership">{{ _("Data Ownership") }}</label>
+    <label class="control-label" for="ownership">{{ _("Person responsible for data creation") }}</label>
   </div>
   <div class="controls">
     <div class="row">
           <div class="col-md-6">
-            <label class="control-label" style="padding-top: 20px;"for="ownerName">{{ _("Owner Name") }}</label>
-            <span><input id="field-ownerName" type="text" name="ownerName" value="" placeholder="Owner Name" class="form-control" style="width:50%">
+            <label class="control-label" style="padding-top: 10px;"for="ownerName">{{ _(" Name") }}</label>
+            <span><input id="field-ownerName" type="text" name="ownerName" value="" placeholder="Owner Name" class="form-control" >
             </span>
           </div>
-        </div>    
-    </div>
-  <div class="controls">
-    <div class="row">
+           
+    
+  
+    
       <div class="col-md-6">
-        <label class="control-label" style="padding-top: 20px;"for="ownerEmail">{{ _("Owner email") }}</label>
-        <span><input id="field-ownerEmail" type="text" name="ownerEmail" value="" placeholder="Owner email" class="form-control" style="width:50%"></span>
+        <label class="control-label" style="padding-top: 10px;"for="ownerEmail">{{ _("Email") }}</label>
+        <span><input id="field-ownerEmail" type="text" name="ownerEmail" value="" placeholder="Owner email" class="form-control" ></span>
       </div>
-    </div>    
+      </div>
+       
   </div>
   <div style="overflow:auto;">
-    <div style="float:right;">
+    <div style = "padding-top: 20px;">
+    <div style="float:right; ">
       <button type="button" class="btn btn-primary" id="prevBtn" onclick="nextPrev('tab2')">Previous</button>
       <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextPrev('tab4')">Next</button>
     </div>
+  </div>
   </div>
 
   {% block form_actions %}

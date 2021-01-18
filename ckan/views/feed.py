@@ -22,7 +22,7 @@ feeds = Blueprint(u'feeds', __name__, url_prefix=u'/feeds')
 
 ITEMS_LIMIT = config.get(u'ckan.feeds.limit', 20)
 BASE_URL = config.get(u'ckan.site_url')
-SITE_TITLE = config.get(u'ckan.site_title', u'CKAN')
+SITE_TITLE = config.get(u'ckan.site_title', u'MinEx CRC')
 
 
 def _package_search(data_dict):

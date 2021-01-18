@@ -25,7 +25,7 @@
       {% set is_upload = (data.url_type == 'upload') %}
       {{ form.image_upload(data, errors, field_url='url', field_upload='upload', field_clear='clear_upload',
          is_upload_enabled=h.uploads_enabled(), is_url=data.url and not is_upload, is_upload=is_upload,
-         upload_label=_('Data'), url_label=_('URL'), placeholder=_('http://example.com/external-data.csv'), field_name='name') }}
+         upload_label=_('Descriptive'), url_label=_('URL'), placeholder=_('http://example.com/external-data.csv'), field_name='name') }}
     {% endblock %}
     <!--{% block basic_fields_name %}
       {{ form.input('name', id='field-name', label=_('Name'), placeholder=_('eg. January 2011 Gold Prices'), value=data.name, error=errors.name, classes=['control-full']) }}
@@ -37,7 +37,7 @@
     {% endblock %}
 
     {% block basic_fields_description %}
-      {{ form.markdown('description', id='field-description', label=_('Brief about this file'), placeholder=_('Some useful notes about the data'), value=data.description, error=errors.description) }}
+      {{ form.markdown('description', id='field-description', label=_('Summary of data in the file'), placeholder=_('Some useful summary of data in the file'), value=data.description, error=errors.description) }}
     {% endblock %}
     {% block basic_fields_rights %}
     <div class="form-group">
@@ -47,14 +47,14 @@
           <div class="controls">
             <div class="row">
               <div class="col-md-6">
-                <select id="field-rights" name="rights_id" data-module="autocomplete">
+                <select id="field-rights" name="rights_id" >
                   {% set existing_rights_id = data.get('rights_id') %}
                   {% set empty_rights = _('Please select the access right') %}
                   <option value="">{{ empty_rights }}</option>
                   <option value="1">Project Group</option>
                   <option value="2">Program group</option>
-                  <option value="3">Public</option>
-                  <option value="4">Restricted</option>
+                  <option value="3">MinExCRC</option>
+                  
                 </select>
               </div>
             </div>
@@ -70,17 +70,17 @@
   <div class="controls">
     <div class="row">
           <div class="col-md-6">
-            <label class="control-label" style="padding-top: 20px;"for="ownerName">{{ _("Owner Name") }}</label>
-            <span><input id="field-ownerName" type="text" name="ownerName" value="" placeholder="Owner Name" class="form-control" style="width:50%">
+            <label class="control-label" style="padding-top: 20px;"for="ownerName">{{ _("Uploader name") }}</label>
+            <span><input id="field-ownerName" type="text" name="ownerName" value="" placeholder="Uploader Name" class="form-control" >
             </span>
           </div>
-        </div>    
-    </div>
-  <div class="controls">
-    <div class="row">
+           
+    
+  
+  
       <div class="col-md-6">
-        <label class="control-label" style="padding-top: 20px;"for="ownerEmail">{{ _("Owner email") }}</label>
-        <span><input id="field-ownerEmail" type="text" name="ownerEmail" value="" placeholder="Owner email" class="form-control" style="width:50%"></span>
+        <label class="control-label" style="padding-top: 20px;"for="ownerEmail">{{ _("Uploader  email") }}</label>
+        <span><input id="field-ownerEmail" type="text" name="ownerEmail" value="" placeholder="Uploader email" class="form-control" ></span>
       </div>
     </div>    
   </div>

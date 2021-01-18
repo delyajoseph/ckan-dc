@@ -198,7 +198,7 @@ class FeedController(base.BaseController):
                                   action=group_type,
                                   id=obj_dict['name'])
 
-        site_title = config.get('ckan.site_title', 'CKAN')
+        site_title = config.get('ckan.site_title', 'MinEx CRC')
         if is_org:
             guid = _create_atom_id(u'/feeds/organization/%s.atom' %
                                    obj_dict['name'])
@@ -268,7 +268,7 @@ class FeedController(base.BaseController):
 
         alternate_url = self._alternate_url(params, tags=id)
 
-        site_title = config.get('ckan.site_title', 'CKAN')
+        site_title = config.get('ckan.site_title', 'MinEx CRC')
 
         return self.output_feed(results,
                                 feed_title=u'%s - Tag: "%s"' %
@@ -300,7 +300,7 @@ class FeedController(base.BaseController):
 
         alternate_url = self._alternate_url(params)
 
-        site_title = config.get('ckan.site_title', 'CKAN')
+        site_title = config.get('ckan.site_title', 'MinEx CRC')
 
         return self.output_feed(results,
                                 feed_title=site_title,
@@ -351,7 +351,7 @@ class FeedController(base.BaseController):
 
         alternate_url = self._alternate_url(request.params)
 
-        site_title = config.get('ckan.site_title', 'CKAN')
+        site_title = config.get('ckan.site_title', 'MinEx CRC')
 
         return self.output_feed(results,
                                 feed_title=u'%s - Custom query' % site_title,

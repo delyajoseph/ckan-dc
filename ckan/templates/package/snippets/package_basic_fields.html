@@ -3,7 +3,7 @@
 
 <!-----------------------Name----------------------------------->
 {% block package_basic_fields_title %}
-{{ form.input('title', id='field-title', label=_('Project title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-label'], attrs={'data-module': 'slug-preview-target', 'class': 'form-control'}) }}
+{{ form.input('title', id='field-title', label=_('MinExCRC Project Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-label'], attrs={'data-module': 'slug-preview-target', 'class': 'form-control'}) }}
 {% endblock %}
   
 <!-----------------------URL----------------------------------->
@@ -71,6 +71,7 @@
 
   {% set dataset_is_draft = data.get('state', 'draft').startswith('draft') or data.get('state', 'none') ==  'none' %}
   {% set dataset_has_organization = data.owner_org or data.group_id %}
+  {# {% set group_match = data.owner_org or data.group_id %} #} <!-- Custom adding for group visibility-->
   {% set organizations_available = h.organizations_available('create_dataset') %}
   {% set user_can_update_owner_org = h.can_update_owner_org(data, organizations_available) %}
   {% set user_is_sysadmin = h.check_access('sysadmin') %}
@@ -86,9 +87,9 @@
     {% if show_organizations_selector %}
     {% set existing_org = data.owner_org or data.group_id %}
     <div class="form-group control-medium">
-      <label for="field-organizations" class="control-label">{{ _('Organization') }}</label>
+      <label for="field-organizations" class="control-label">{{ _('Research Organization resposible for data set') }}</label>
       <div class="controls">
-        <select id="field-organizations" name="owner_org" data-module="autocomplete">
+        <select id="field-organizations" name="owner_org"  class="form-control" >
           {% if h.check_config_permission('create_unowned_dataset') %}
           <option value="" {% if not selected_org and data.id %} selected="selected" {% endif %}>{{ _('No organization') }}</option>
           {% endif %}
