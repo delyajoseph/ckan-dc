@@ -56,6 +56,8 @@ def default_resource_schema(
     }
 
 
+
+
 @validator_args
 def default_update_resource_schema(ignore):
     schema = default_resource_schema()
@@ -97,6 +99,22 @@ def default_create_tag_schema(
     # You're not allowed to specify your own ID when creating a tag.
     schema['id'] = [empty]
     return schema
+
+@validator_args
+def default_create_keyresearcher_schema(
+        ignore, ignore_missing,
+        unicode_safe, not_empty, name_validator, email_validator,
+        organisation_name_validator, research_program_id_exists):
+        return {
+            'id': [ignore_missing, unicode_safe],
+            'name': [ignore_missing],
+            'contact': [ignore_missing, unicode_safe, remove_whitespace],
+            'email': [ignore_missing, unicode_safe],
+            'organisation_name': [ignore_missing, unicode_safe],
+            'research_program_id': [ignore_missing]
+        }
+
+
 
 
 @validator_args
@@ -255,6 +273,12 @@ def default_group_schema(
         'name': [
             not_empty, unicode_safe, name_validator, group_name_validator],
         'title': [ignore_missing, unicode_safe],
+        'pgmln': [ignore_missing, unicode_safe],
+        'pgmlc': [ignore_missing, unicode_safe],
+        'pgmle': [ignore_missing, unicode_safe],
+        'prjln': [ignore_missing, unicode_safe],
+        'prjlc': [ignore_missing, unicode_safe],
+        'prjle': [ignore_missing, unicode_safe],
         'description': [ignore_missing, unicode_safe],
         'image_url': [ignore_missing, unicode_safe],
         'image_display_url': [ignore_missing, unicode_safe],
@@ -398,6 +422,8 @@ def default_user_schema(
         'password': [user_password_validator, user_password_not_empty,
                      ignore_missing, unicode_safe],
         'password_hash': [ignore_missing, ignore_not_sysadmin, unicode_safe],
+        'contact': [ignore_missing, unicode_safe],
+        'organisation': [ignore_missing, unicode_safe],
         'email': [not_empty, email_validator, email_is_unique, unicode_safe],
         'about': [ignore_missing, user_about_validator, unicode_safe],
         'created': [ignore],
@@ -565,12 +591,13 @@ def default_follow_dataset_schema(
 
 @validator_args
 def member_schema(
-        not_missing, group_id_or_name_exists, unicode_safe,
+        ignore_missing, not_missing, group_id_or_name_exists, unicode_safe,
         user_id_or_name_exists, role_exists):
     return {
         'id': [not_missing, group_id_or_name_exists, unicode_safe],
         'username': [not_missing, user_id_or_name_exists, unicode_safe],
         'role': [not_missing, role_exists, unicode_safe],
+        'is_keyresearcher' : [ignore_missing]
     }
 
 

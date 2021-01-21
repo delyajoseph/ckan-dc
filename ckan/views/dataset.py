@@ -286,8 +286,8 @@ def search(package_type):
     facets = OrderedDict()
 
     default_facet_titles = {
-        u'organization': _(u'Organizations'),
-        u'groups': _(u'Groups'),
+        u'organization': _(u'Programs'),
+        #u'groups': _(u'Groups'),
         u'tags': _(u'Tags'),
         u'res_format': _(u'Formats'),
         u'license_id': _(u'Licenses'),
@@ -661,6 +661,8 @@ class CreateView(MethodView):
             return self.get(package_type, data_dict, errors, error_summary)
 
     def get(self, package_type, data=None, errors=None, error_summary=None):
+
+        log.info('### CKAN views > dataset.py')
         context = self._prepare(data)
         if data and u'type' in data:
             package_type = data[u'type']
@@ -692,6 +694,8 @@ class CreateView(MethodView):
         data[
             u'group_id'
         ] = request.args.get(u'group') or request.args.get(u'groups__0__id')
+
+        log.info('### CKAN views > dataset.py, group_id %s ' % data.get(u'group_id'))
 
         form_snippet = _get_pkg_template(
             u'package_form', package_type=package_type

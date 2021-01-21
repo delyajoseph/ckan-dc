@@ -18,16 +18,18 @@
       <tr>
           <th>{{ _('User') }}</th>
           <th>{{ _('Role') }}</th>
+          <th>{{ _('Key Researcher') }}</th>
           <th></th>
       </tr>
     </thead>
     <tbody>
-      {% for user_id, user, role in members %}
+      {% for user_id, user, role, is_keyresearcher in members %}
         <tr>
           <td class="media">
             {{ h.linked_user(user_id, maxlength=20) }}
           </td>
           <td>{{ role }}</td>
+          <td>{{ is_keyresearcher }}</td>
           <td>
             <div class="btn-group pull-right">
                 <a class="btn btn-default btn-sm" href="{{ h.url_for(group_type + '.member_new', id=group_dict.id, user=user_id) }}" title="{{ _('Edit') }}">

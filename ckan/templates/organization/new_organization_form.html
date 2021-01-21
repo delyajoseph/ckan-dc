@@ -9,14 +9,14 @@ overriding the form blocks depending on the current context
 {% endblock %}
 
 {% block custom_fields %}
-  {% if action == "edit" %}{{ super() }}{% endif %}
+  {{ super() }}
 {% endblock %}
 
 {% block save_text %}
   {%- if action == "edit" -%}
-    {{ _('Update Organization') }}
+    {{ _('Update') }}
   {%- else -%}
-    {{ _('Create Organization') }}
+    {{ _('Create') }}
   {%- endif -%}
 {% endblock %}
 

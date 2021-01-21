@@ -301,8 +301,8 @@ def _read(id, limit, group_type):
     facets = OrderedDict()
 
     default_facet_titles = {
-        u'organization': _(u'Organizations'),
-        u'groups': _(u'Groups'),
+        u'organization': _(u'Programs'),
+        #u'groups': _(u'Groups'),
         u'tags': _(u'Tags'),
         u'res_format': _(u'Formats'),
         u'license_id': _(u'Licenses')
@@ -519,6 +519,8 @@ def about(id, group_type, is_organization):
 
 
 def members(id, group_type, is_organization):
+
+    log.info("##### CKAN getting members list............ views > group.py")
     extra_vars = {}
     set_org(is_organization)
     context = {u'model': model, u'session': model.Session, u'user': g.user}
@@ -1073,6 +1075,9 @@ class MembersGroupView(MethodView):
         return context
 
     def post(self, group_type, is_organization, id=None):
+
+        log.info("#### CKAN view > group.py ..... ")
+        
         set_org(is_organization)
         context = self._prepare(id)
         data_dict = clean_dict(
@@ -1080,12 +1085,17 @@ class MembersGroupView(MethodView):
         data_dict['id'] = id
 
         email = data_dict.get(u'email')
-
+        is_keyresearcher = data_dict.get(u'is_keyresearcher') != None
+        data_dict['is_keyresearcher'] = is_keyresearcher
+        
+        log.info('#### CKAN views > group.py, is_keyresearcher: %s' % is_keyresearcher)
+                
         if email:
             user_data_dict = {
                 u'email': email,
                 u'group_id': data_dict['id'],
-                u'role': data_dict['role']
+                u'role': data_dict['role'],
+                u'is_keyresearcher': is_keyresearcher
             }
             del data_dict['email']
             user_dict = _action(u'user_invite')(context, user_data_dict)

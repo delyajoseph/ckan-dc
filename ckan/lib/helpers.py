@@ -1248,8 +1248,8 @@ def get_facet_title(name):
     if config_title:
         return config_title
 
-    facet_titles = {'organization': _('Organizations'),
-                    'groups': _('Groups'),
+    facet_titles = {'organization': _('Programs'),
+                    #'groups': _('Groups'),
                     'tags': _('Tags'),
                     'res_format': _('Formats'),
                     'license': _('Licenses'), }
@@ -2133,6 +2133,16 @@ def organizations_available(
         'include_dataset_count': include_dataset_count}
     return logic.get_action('organization_list_for_user')(context, data_dict)
 
+@core_helper
+def organizations_keyresearcher_available(group_id=None, include_dataset_count=False):
+    '''Return a list of keyresearchers available in this organizations that the current user has the specified
+    permission for.
+    '''
+    context = {'user': c.user}
+    data_dict = {
+        'group_id': group_id
+        }
+    return logic.get_action('organization_keyresearcher_list')(context, data_dict)
 
 @core_helper
 def roles_translated():

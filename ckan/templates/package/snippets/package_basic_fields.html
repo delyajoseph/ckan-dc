@@ -3,7 +3,7 @@
 
 <!-----------------------Name----------------------------------->
 {% block package_basic_fields_title %}
-{{ form.input('title', id='field-title', label=_('MinExCRC Project Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-label'], attrs={'data-module': 'slug-preview-target', 'class': 'form-control'}) }}
+{{ form.input('title', id='field-title', label=_(' Project Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-label'], attrs={'data-module': 'slug-preview-target', 'class': 'form-control'}) }}
 {% endblock %}
   
 <!-----------------------URL----------------------------------->
@@ -72,13 +72,30 @@
   {% set dataset_is_draft = data.get('state', 'draft').startswith('draft') or data.get('state', 'none') ==  'none' %}
   {% set dataset_has_organization = data.owner_org or data.group_id %}
   {# {% set group_match = data.owner_org or data.group_id %} #} <!-- Custom adding for group visibility-->
+  
   {% set organizations_available = h.organizations_available('create_dataset') %}
+ 
+  {% set keyresearchers_available = h.organizations_keyresearcher_available(data.group_id) %}
+
+  data.group_id ----- {{ data.group_id }}
+
   {% set user_can_update_owner_org = h.can_update_owner_org(data, organizations_available) %}
   {% set user_is_sysadmin = h.check_access('sysadmin') %}
   {% set show_organizations_selector = organizations_available and user_can_update_owner_org %}
   {% set show_visibility_selector = dataset_has_organization or (organizations_available and (user_is_sysadmin or dataset_is_draft)) %}
 <!-----------------------Visibility----------------------------------->
 
+<div class="row"> 
+  <div class="form-group control-medium">
+      <div class="controls">
+        <select id="field-keyresearcher" name="keyresearcher"  class="form-control" >
+          {% for kr in keyresearchers_available %}
+          <option value="{{ kr.id }}">{{ kr.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div> 
+</div>  
 
   {% if show_organizations_selector and show_visibility_selector %}
   <div data-module="dataset-visibility">
@@ -87,7 +104,7 @@
     {% if show_organizations_selector %}
     {% set existing_org = data.owner_org or data.group_id %}
     <div class="form-group control-medium">
-      <label for="field-organizations" class="control-label">{{ _('Research Organization resposible for data set') }}</label>
+      <label for="field-organizations" class="control-label">{{ _('Research Program') }}</label>
       <div class="controls">
         <select id="field-organizations" name="owner_org"  class="form-control" >
           {% if h.check_config_permission('create_unowned_dataset') %}

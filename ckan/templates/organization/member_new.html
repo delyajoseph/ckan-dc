@@ -35,6 +35,11 @@
                 data-module-source="/api/2/util/user/autocomplete?ignore_self=true&q=?">
             {% endif %}
           </div>
+          <div class="controls">
+            <label class="checkbox">
+              <input id="is_keyresearcher" type="checkbox" name="is_keyresearcher" class="form-control" /> Key Researcher
+            </label>
+          </div>
         </div>
       </div>
       {% if not user %}
@@ -59,6 +64,7 @@
       {% endif %}
     </div>
 
+    
     {% if user and user.name == c.user and user_role == 'admin' %}
       {% set format_attrs = {'data-module': 'autocomplete', 'disabled': 'disabled'} %}
       {{ form.select('role', label=_('Role'), options=roles, selected=user_role, error='', attrs=format_attrs) }}
@@ -68,6 +74,7 @@
       {{ form.select('role', label=_('Role'), options=roles, selected=user_role, error='', attrs=format_attrs) }}
     {% endif %}
 
+    
     <div class="form-actions">
       {% if user %}
         <a href="{{ h.url_for(group_type + '.member_delete', id=group_dict.id, user=user.id) }}" class="btn btn-danger pull-left" data-module="confirm-action" data-module-content="{{ _('Are you sure you want to delete this member?') }}">{{ _('Delete') }}</a>

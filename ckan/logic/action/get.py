@@ -181,6 +181,8 @@ def current_package_list_with_resources(context, data_dict):
 
 
 def member_list(context, data_dict=None):
+
+    log.info("#### CKAN getting members list............ action > get.py")
     '''Return the members of a group.
 
     The user must have permission to 'get' the group.
@@ -208,6 +210,7 @@ def member_list(context, data_dict=None):
 
     obj_type = data_dict.get('object_type', None)
     capacity = data_dict.get('capacity', None)
+    #is_keyresearcher = data_dict.get('is_keyresearcher', None)
 
     # User must be able to update the group to remove a member from it
     _check_access('group_show', context, data_dict)
@@ -229,7 +232,7 @@ def member_list(context, data_dict=None):
         except KeyError:
             return capacity
 
-    return [(m.table_id, m.table_name, translated_capacity(m.capacity))
+    return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.is_keyresearcher)
             for m in q.all()]
 
 
@@ -629,6 +632,55 @@ def group_list_authz(context, data_dict):
     group_list = model_dictize.group_list_dictize(groups, context)
     return group_list
 
+def organization_keyresearcher_list(context, data_dict):
+
+    log.info('#### CKAN get.py > organization_keyresearcher_list, group_id: %s' % data_dict.get(u'group_id'))
+    model = context['model']
+    if data_dict.get('id'):
+        user_obj = model.User.get(data_dict['id'])
+        if not user_obj:
+            raise NotFound
+        user = user_obj.name
+    else:
+        user = context['user']
+
+    user_id = authz.get_user_id_for_username(user, allow_none=True)
+    if not user_id:
+        return []
+
+    users_q = model.Session.query(model.User) \
+        .filter(model.User.state == 'active')
+   
+    group_id = data_dict.get(u'group_id')
+    
+    q = model.Session.query(model.Member) \
+        .filter(model.Member.table_name == 'user') \
+        .filter(model.Member.table_id == user_id) \
+        .filter(model.Member.state == 'active') \
+        .filter(model.Member.is_keyresearcher == 'True') \
+        .filter(model.Member.group_id == group_id)
+
+    keyresearcher_ids = set()
+    keyresearchers_list = {}
+    for member in q.all():
+        log.info('#### CKAN get.py > member id %s ' % member.id)
+        keyresearcher_ids.add(member.id)
+
+
+    if not keyresearcher_ids:
+        return []
+
+    users_q = users_q.filter(model.User.id.in_(keyresearcher_ids))
+        
+    for user in users_q:
+        log.info('#### CKAN get.py >  user name %s ' % user.name)
+        
+        keyresearchers_list['id'] = user.id
+        keyresearchers_list['name'] = user.name
+        keyresearchers_list['organisation'] = user.organisation
+    #keyresearchers_list = model_dictize.user_list_dictize(keyresearchers_list, context)
+    
+    return keyresearchers_list
 
 def organization_list_for_user(context, data_dict):
     '''Return the organizations that the user has a given permission for.

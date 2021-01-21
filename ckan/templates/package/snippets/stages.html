@@ -20,21 +20,7 @@
   <ol class="stages custom_stages {{ class }}">
     <li class="first {{ s1 }}">
       {% if s1 != 'complete' %}
-        <span class="highlight">{{ _('Project Update') }}</span>
-      {% else %}
-        <button class="highlight" name="save" value="go-dataset" type="submit">{{ _('Create dataset') }}</button>
-      {% endif %}
-    </li>
-    <li class="first {{ s1 }}">
-      {% if s1 != 'complete' %}
-        <span class="highlight">{{ _('About Data') }}</span>
-      {% else %}
-        <button class="highlight" name="save" value="go-dataset" type="submit">{{ _('Create dataset') }}</button>
-      {% endif %}
-    </li>
-    <li class="first {{ s1 }}">
-      {% if s1 != 'complete' %}
-        <span class="highlight">{{ _('Keywords') }}</span>
+        <span class="highlight">{{ _('Project Details') }}</span>
       {% else %}
         <button class="highlight" name="save" value="go-dataset" type="submit">{{ _('Create dataset') }}</button>
       {% endif %}
