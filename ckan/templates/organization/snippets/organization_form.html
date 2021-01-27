@@ -51,11 +51,11 @@
   {% endblock %}
 
   
-  {% block custom_fields %}
+  {#{% block custom_fields %}
     {% snippet 'snippets/custom_form_fields.html', extras=data.extras, errors=errors, limit=3 %}
   {% endblock %}
   
-  {{ form.required_message() }}
+  {{ form.required_message() }}#}
 
   <div class="form-actions">
     {% block delete_button %}

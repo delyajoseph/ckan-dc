@@ -4,6 +4,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
@@ -3197,25 +3198,25 @@ fieldset[disabled] .btn-default.focus {
 }
 .btn-primary {
   color: #fff;
-  background-color: #206b82;
-  border-color: #1b5a6e;
+  background-color: #f27221;
+  border-color: #f27221;
 }
 .btn-primary:focus,
 .btn-primary.focus {
   color: #fff;
-  background-color: #164959;
+  background-color: #f27221;
   border-color: #020607;
 }
 .btn-primary:hover {
   color: #fff;
-  background-color: #164959;
+  background-color: #f27221;
   border-color: #0f323c;
 }
 .btn-primary:active,
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
   color: #fff;
-  background-color: #164959;
+  background-color: #f27221;
   background-image: none;
   border-color: #0f323c;
 }
@@ -9454,7 +9455,7 @@ h4 small {
 [role=main],
 .main {
   position: relative;
-  padding-bottom: 20px;
+  /*padding-bottom: 20px;*/
 }
 @media (min-width: 768px) {
   .main {
@@ -9797,7 +9798,7 @@ h4 small {
 }
 @media (min-width: 992px) {
   .homepage [role=main] {
-    padding: 20px 0;
+    /*padding: 20px 0;*/
   }
   .homepage.layout-1 .row1 .col2 {
     position: absolute;
@@ -10066,7 +10067,7 @@ h4 small {
   margin-bottom: initial;
   padding: 10px 0;
   color: #fff;
-  background: #005d7a url("../../../base/images/bg.png");
+  background: #002f41 url("../../../base/images/bg.png");
   padding: 20px 0;
 }
 .site-footer:before,

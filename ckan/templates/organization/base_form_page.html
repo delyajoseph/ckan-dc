@@ -1,7 +1,7 @@
 {% extends "organization/edit_base.html" %}
 
 {% block breadcrumb_content %}
-  <li>{{ h.nav_link(_('Programs'), named_route=group_type+'.index') }}</li>
+  <li>{{ h.nav_link(_('Projects'), named_route=group_type+'.index') }}</li>
   <li class="active">{% block breadcrumb_link %}{{ h.nav_link(_('Add an Organization'), named_route=group_type+'.new') }}{% endblock %}</li>
 {% endblock %}
 

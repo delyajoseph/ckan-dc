@@ -1248,7 +1248,7 @@ def get_facet_title(name):
     if config_title:
         return config_title
 
-    facet_titles = {'organization': _('Programs'),
+    facet_titles = {'organization': _('Projects'),
                     #'groups': _('Groups'),
                     'tags': _('Tags'),
                     'res_format': _('Formats'),
@@ -2771,15 +2771,7 @@ def get_translated(data_dict, field):
         val = data_dict.get(field, '')
         return _(val) if val and isinstance(val, string_types) else val
 
-@core_helper
-def program_list():
-    programs = ['Program1', 'Program2', 'Program3', 'Program4']
-    return programs
 
-@core_helper
-def project_no():
-    projects = ['Project1', 'Project2', 'Project3', 'Project4', 'Project5', 'Project6', 'Project7']
-    return projects
 @core_helper
 def milestone():
     milestones = ['Milestone 1', 'Milestone 2', 'Milestone 3', 'Milestone 4', 'Milestone 5', 'Milestone 6', 'Milestone 7']

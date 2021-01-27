@@ -100,22 +100,6 @@ def default_create_tag_schema(
     schema['id'] = [empty]
     return schema
 
-@validator_args
-def default_create_keyresearcher_schema(
-        ignore, ignore_missing,
-        unicode_safe, not_empty, name_validator, email_validator,
-        organisation_name_validator, research_program_id_exists):
-        return {
-            'id': [ignore_missing, unicode_safe],
-            'name': [ignore_missing],
-            'contact': [ignore_missing, unicode_safe, remove_whitespace],
-            'email': [ignore_missing, unicode_safe],
-            'organisation_name': [ignore_missing, unicode_safe],
-            'research_program_id': [ignore_missing]
-        }
-
-
-
 
 @validator_args
 def default_create_package_schema(

@@ -286,7 +286,7 @@ def search(package_type):
     facets = OrderedDict()
 
     default_facet_titles = {
-        u'organization': _(u'Programs'),
+        u'organization': _(u'Projects'),
         #u'groups': _(u'Groups'),
         u'tags': _(u'Tags'),
         u'res_format': _(u'Formats'),

@@ -24,10 +24,10 @@ Example:
   {% set text_no_query_none = _('No groups found') %}
 
 {% elif type == 'organization' %}
-  {% set text_query = ungettext('{number} programs found for "{query}"', '{number} programs found for "{query}"', count) %}
-  {% set text_query_none = _('No programs found for "{query}"') %}
-  {% set text_no_query = ungettext('{number} programs found', '{number} programs found', count) %}
-  {% set text_no_query_none = _('No programs found') %}
+  {% set text_query = ungettext('{number} projects found for "{query}"', '{number} projects found for "{query}"', count) %}
+  {% set text_query_none = _('No projects found for "{query}"') %}
+  {% set text_no_query = ungettext('{number} projects found', '{number} projects found', count) %}
+  {% set text_no_query_none = _('No projects found') %}
 
 {% else %}
   {% set text_query_singular = '{number} ' + type + ' found for "{query}"' %}
