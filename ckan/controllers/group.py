@@ -931,6 +931,8 @@ class GroupController(base.BaseController):
                       extra_vars={'group_type': group_type})
 
     def about(self, id):
+
+        log.info("### CKAN controllers group.py ---> about")
         group_type = self._ensure_controller_matches_group_type(id)
         context = {'model': model, 'session': model.Session,
                    'user': c.user}

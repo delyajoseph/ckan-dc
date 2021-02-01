@@ -43,6 +43,7 @@ resource_table = Table(
     Column('position', types.Integer),
 
     Column('name', types.UnicodeText),
+    Column('resource_rights', types.UnicodeText),
     Column('resource_type', types.UnicodeText, doc='remove_if_not_provided'),
     Column('mimetype', types.UnicodeText, doc='remove_if_not_provided'),
     Column('mimetype_inner', types.UnicodeText, doc='remove_if_not_provided'),

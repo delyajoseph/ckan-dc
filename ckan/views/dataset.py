@@ -382,6 +382,8 @@ def search(package_type):
 
 
 def resources(package_type, id):
+
+    log.info("############## CKAN dataset.py ---> resources")
     context = {
         u'model': model,
         u'session': model.Session,

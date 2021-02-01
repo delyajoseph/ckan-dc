@@ -1305,9 +1305,9 @@ def sorted_extras(package_extras, auto_clean=False, subs=None, exclude=None):
         output.append((k, v))
     return output
 
-
 @core_helper
 def check_access(action, data_dict=None):
+    log.info("##### CKAN check_access.....")
     if not getattr(g, u'user', None):
         g.user = ''
     context = {'model': model,
@@ -2116,6 +2116,8 @@ def groups_available(am_member=False):
     :type am-member: bool
 
     '''
+
+    
     context = {}
     data_dict = {'available_only': True, 'am_member': am_member}
     return logic.get_action('group_list_authz')(context, data_dict)
@@ -2124,6 +2126,9 @@ def groups_available(am_member=False):
 @core_helper
 def organizations_available(
         permission='manage_group', include_dataset_count=False):
+
+    log.info('### CKAN helpers.py ---> organizations_available')
+
     '''Return a list of organizations that the current user has the specified
     permission for.
     '''

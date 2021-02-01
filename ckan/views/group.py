@@ -378,6 +378,18 @@ def _update_facet_titles(facets, group_type):
     return facets
 
 
+def _get_researcher_dict(id):
+    context = {
+        u'model': model,
+        u'session': model.Session,
+        u'user': g.user,
+        u'for_view': True
+    }
+    try:
+        return _action(u'keyresearcher_info')(context, id)
+    except (NotFound, NotAuthorized):
+        base.abort(404, _(u'Group not found'))
+
 def _get_group_dict(id, group_type):
     u''' returns the result of group_show action or aborts if there is a
     problem '''
@@ -498,10 +510,16 @@ def activity(id, group_type, is_organization, offset=0):
 
 
 def about(id, group_type, is_organization):
+
+    log.info("### CKAN views group.py ---> about")
     extra_vars = {}
     set_org(is_organization)
     context = {u'model': model, u'session': model.Session, u'user': g.user}
     group_dict = _get_group_dict(id, group_type)
+
+    log.info("### CKAN views group.py ---> about, id %s" %id)
+    keyresearcher_list = _get_researcher_dict(id)
+
     group_type = group_dict['type']
     _setup_template_variables(context, {u'id': id}, group_type=group_type)
 
@@ -512,7 +530,8 @@ def about(id, group_type, is_organization):
     g.group_type = group_type
 
     extra_vars = {u"group_dict": group_dict,
-                  u"group_type": group_type}
+                  u"group_type": group_type,
+                  u"key_reseachers" : keyresearcher_list}
 
     return base.render(
         _get_group_template(u'about_template', group_type), extra_vars)

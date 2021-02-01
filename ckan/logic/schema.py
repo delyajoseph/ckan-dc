@@ -42,6 +42,7 @@ def default_resource_schema(
         'position': [ignore],
         'name': [ignore_missing, unicode_safe],
         'resource_type': [ignore_missing, unicode_safe],
+        'resource_rights': [ignore_missing, unicode_safe],
         'url_type': [ignore_missing, unicode_safe],
         'mimetype': [ignore_missing, unicode_safe],
         'mimetype_inner': [ignore_missing, unicode_safe],

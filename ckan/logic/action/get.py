@@ -632,19 +632,18 @@ def group_list_authz(context, data_dict):
     group_list = model_dictize.group_list_dictize(groups, context)
     return group_list
 
-def keyresercher_info(context,data_dict):
+def keyresearcher_info(context,id):
 
     model = context['model']
-    if data_dict.get('id'):
-        user_obj = model.User.get(data_dict['id'])
-        if not user_obj:
-            raise NotFound
-        user = user_obj.name
-    else:
-        user = context['user']
+    user = context['user']
 
-    group_id = data_dict.get('group_id')
-   
+    group_q = model.Session.query(model.Group) \
+        .filter(model.Group.name == id)
+
+    group_id = group_q.first().id
+    #group_id = group_q.id
+
+    log.info("### CKAN action get.py, group_id %s" %group_id)
     q = model.Session.query(model.Member) \
         .filter(model.Member.table_name == 'user') \
         .filter(model.Member.state == 'active') \
@@ -661,13 +660,17 @@ def keyresercher_info(context,data_dict):
     if not keyresearcher_ids:
         return []
 
+    users_q = model.Session.query(model.User) \
+        .filter(model.User.state == 'active')
+
     users_q = users_q.filter(model.User.id.in_(keyresearcher_ids))
         
     keylist = [] 
     for user in users_q:
-        keylist.append({"id" : user.id, "name" : user.fullname, "organisation" : user.organisation})
+        keylist.append({"id" : user.id, "name" : user.fullname, 
+        "organisation" : user.organisation, "contact" : user.contact, "email" : user.email})
     
-    #log.info('### CKAN json keyre %s' % json.dumps(keylist))
+    log.info('### CKAN json keyre %s' % json.dumps(keylist))
 
     return keylist
    
