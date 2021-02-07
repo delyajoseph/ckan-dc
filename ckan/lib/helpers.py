@@ -1248,8 +1248,8 @@ def get_facet_title(name):
     if config_title:
         return config_title
 
-    facet_titles = {'organization': _('Organizations'),
-                    'groups': _('Groups'),
+    facet_titles = {'organization': _('Projects'),
+                    #'groups': _('Groups'),
                     'tags': _('Tags'),
                     'res_format': _('Formats'),
                     'license': _('Licenses'), }
@@ -1305,9 +1305,9 @@ def sorted_extras(package_extras, auto_clean=False, subs=None, exclude=None):
         output.append((k, v))
     return output
 
-
 @core_helper
 def check_access(action, data_dict=None):
+    log.info("##### CKAN check_access.....")
     if not getattr(g, u'user', None):
         g.user = ''
     context = {'model': model,
@@ -2116,6 +2116,8 @@ def groups_available(am_member=False):
     :type am-member: bool
 
     '''
+
+    
     context = {}
     data_dict = {'available_only': True, 'am_member': am_member}
     return logic.get_action('group_list_authz')(context, data_dict)
@@ -2124,6 +2126,9 @@ def groups_available(am_member=False):
 @core_helper
 def organizations_available(
         permission='manage_group', include_dataset_count=False):
+
+    log.info('### CKAN helpers.py ---> organizations_available')
+
     '''Return a list of organizations that the current user has the specified
     permission for.
     '''
@@ -2133,6 +2138,16 @@ def organizations_available(
         'include_dataset_count': include_dataset_count}
     return logic.get_action('organization_list_for_user')(context, data_dict)
 
+@core_helper
+def organizations_keyresearcher_available(group_id=None, include_dataset_count=False):
+    '''Return a list of keyresearchers available in this organizations that the current user has the specified
+    permission for.
+    '''
+    context = {'user': c.user}
+    data_dict = {
+        'group_id': group_id
+        }
+    return logic.get_action('organization_keyresearcher_list')(context, data_dict)
 
 @core_helper
 def roles_translated():
@@ -2761,15 +2776,7 @@ def get_translated(data_dict, field):
         val = data_dict.get(field, '')
         return _(val) if val and isinstance(val, string_types) else val
 
-@core_helper
-def program_list():
-    programs = ['Program1', 'Program2', 'Program3', 'Program4']
-    return programs
 
-@core_helper
-def project_no():
-    projects = ['Project1', 'Project2', 'Project3', 'Project4', 'Project5', 'Project6', 'Project7']
-    return projects
 @core_helper
 def milestone():
     milestones = ['Milestone 1', 'Milestone 2', 'Milestone 3', 'Milestone 4', 'Milestone 5', 'Milestone 6', 'Milestone 7']

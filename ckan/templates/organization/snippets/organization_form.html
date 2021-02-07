@@ -7,30 +7,55 @@
 
   {% block basic_fields %}
     {% set attrs = {'data-module': 'slug-preview-target', 'class': 'form-control'} %}
-    {{ form.input('title', label=_('Name'), id='field-name', placeholder=_('My Organization'), value=data.title, error=errors.title, classes=['control-full'], attrs=attrs) }}
-
+    
+    {{ form.input('title', label=_('Program'), id='field-name', placeholder=_('Program Name'), value=data.title, error=errors.title, classes=['control-full'], attrs=attrs) }}
+    <div class="row">
+      <div class= "form-group col-lg-6 col-md-4">
+    {{ form.input('pgmln', label=_('Program Leader Name'), id='pgml-name', placeholder=_('Name of the Program Leader'), value=data.pgmln, error=errors.pgmln, classes=['control-full']) }}
+        </div>
+      <div class= "form-group col-lg-6 col-md-4">  
+    {{ form.input('prjln', label=_('Project Leader Name'), id='prjl-name', placeholder=_('Name of the Project Leader'), value=data.prjln, error=errors.prjln, classes=['control-full']) }}
+      </div>
+    </div>    
+    <div class="row">
+      <div class= "form-group col-lg-6 col-md-4">
+    {{ form.input('pgmlc', label=_('Program Leader Contact'), id='pgml-contact', placeholder=_('Contact of the Program Leader'), value=data.pgmlc, error=errors.pgmlc, classes=['control-full']) }}
+        </div>
+     <div class= "form-group col-lg-6 col-md-4">  
+    {{ form.input('prjlc', label=_('Project Leader Contact'), id='prjl-contact', placeholder=_('Contact of the Project Leader'), value=data.prjlc, error=errors.prjlc, classes=['control-full']) }}
+      </div>
+     </div> 
+     <div class="row">
+      <div class= "form-group col-lg-6 col-md-4">
+    {{ form.input('pgmle', label=_('Program Leader Email'), id='pgml-email', placeholder=_('Email Address of the Program Leader'), value=data.pgmle, error=errors.pgmle, classes=['control-full']) }}
+        </div>
+      <div class= "form-group col-lg-6 col-md-4">
+    {{ form.input('prjle', label=_('Project Leader Email'), id='prjl-email', placeholder=_('Email Address of the Project Leader'), value=data.prjle, error=errors.prjle, classes=['control-full']) }}
+        </div>
+    </div>
     {# Perhaps these should be moved into the controller? #}
     {% set prefix = h.url_for(group_type + '.read', id='') %}
     {% set domain = h.url_for(group_type + '.read', id='', qualified=true) %}
     {% set domain = domain|replace("http://", "")|replace("https://", "") %}
-    {% set attrs = {'data-module': 'slug-preview-slug', 'class': 'form-control input-sm', 'data-module-prefix': domain, 'data-module-placeholder': '<' + group_type + '>'} %}
+    {% set attrs = {'data-module': 'slug-preview-slug', 'class': 'form-control input-sm', 'data-module-prefix': domain, 'data-module-placeholder': '<program>'} %}
 
-    {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-' + group_type), value=data.name, error=errors.name, attrs=attrs, is_required=true) }}
+    {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-program'), value=data.name, error=errors.name, attrs=attrs, is_required=true) }}
 
-    {{ form.markdown('description', label=_('Description'), id='field-description', placeholder=_('A little information about my organization...'), value=data.description, error=errors.description) }}
+    {{ form.markdown('description', label=_('Description'), id='field-description', placeholder=_('A little information about my program...'), value=data.description, error=errors.description) }}
 
-    {% set is_upload = data.image_url and not data.image_url.startswith('http') %}
+   {% set is_upload = data.image_url and not data.image_url.startswith('http') %}
     {% set is_url = data.image_url and data.image_url.startswith('http') %}
 
     {{ form.image_upload(data, errors, is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload) }}
 
   {% endblock %}
 
-  {% block custom_fields %}
+  
+  {#{% block custom_fields %}
     {% snippet 'snippets/custom_form_fields.html', extras=data.extras, errors=errors, limit=3 %}
   {% endblock %}
-
-  {{ form.required_message() }}
+  
+  {{ form.required_message() }}#}
 
   <div class="form-actions">
     {% block delete_button %}

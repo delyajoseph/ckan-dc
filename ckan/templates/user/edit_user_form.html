@@ -11,6 +11,10 @@
 
     {{ form.input('email', label=_('Email'), id='field-email', type='email', value=data.email, error=errors.email, placeholder=_('eg. joe@example.com'), classes=['control-medium'], is_required=true) }}
 
+    {{ form.input("contact", id="field-contact", label=_("Contact"), placeholder=_("Contact"), value=data.contact, error=errors.contact, classes=["control-medium"]) }}
+    {{ form.input("organisation", id="field-organisation", label=_("Organisation"), placeholder=_("Organisation"), value=data.organisation, error=errors.organisation, classes=["control-medium"]) }}
+  
+
     {{ form.markdown('about', label=_('About'), id='field-about', value=data.about, error=errors.about, placeholder=_('A little information about yourself')) }}
 
     {% if show_email_notifications %}

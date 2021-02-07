@@ -264,8 +264,8 @@ class PackageController(base.BaseController):
             facets = OrderedDict()
 
             default_facet_titles = {
-                'organization': _('Organizations'),
-                'groups': _('Groups'),
+                'organization': _('Projects'),
+                #'groups': _('Groups'),
                 'tags': _('Tags'),
                 'res_format': _('Formats'),
                 'license_id': _('Licenses'),
@@ -369,6 +369,7 @@ class PackageController(base.BaseController):
                       extra_vars={'dataset_type': package_type})
 
     def read(self, id):
+        log.info("##### CKAN package.py ------- _read")
         context = {'model': model, 'session': model.Session,
                    'user': c.user, 'for_view': True,
                    'auth_user_obj': c.userobj}

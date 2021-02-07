@@ -581,8 +581,8 @@ def member_create(context, data_dict=None):
     model = context['model']
     user = context['user']
 
-    group_id, obj_id, obj_type, capacity = \
-        _get_or_bust(data_dict, ['id', 'object', 'object_type', 'capacity'])
+    group_id, obj_id, obj_type, capacity, is_keyresearcher = \
+        _get_or_bust(data_dict, ['id', 'object', 'object_type', 'capacity', 'is_keyresearcher'])
 
     group = model.Group.get(group_id)
     if not group:
@@ -613,8 +613,10 @@ def member_create(context, data_dict=None):
         member = model.Member(table_name=obj_type,
                               table_id=obj.id,
                               group_id=group.id,
-                              state='active')
+                              state='active',
+                              is_keyresearcher=is_keyresearcher)
         member.group = group
+    
     member.capacity = capacity
 
     model.Session.add(member)
@@ -1452,6 +1454,8 @@ def follow_dataset(context, data_dict):
 def _group_or_org_member_create(context, data_dict, is_org=False):
     # creator of group/org becomes an admin
     # this needs to be after the repo.commit or else revisions break
+
+    log.info('### CKAN action > create.py > _group_or_org_member_create')
     model = context['model']
     user = context['user']
     session = context['session']
@@ -1465,6 +1469,9 @@ def _group_or_org_member_create(context, data_dict, is_org=False):
     username = _get_or_bust(data_dict, 'username')
     role = data_dict.get('role')
     group_id = data_dict.get('id')
+    is_keyresearcher = data_dict.get('is_keyresearcher')
+
+    log.info('### CKAN action > create.py > _group_or_org_member_create %s' % is_keyresearcher)
     group = model.Group.get(group_id)
     if not group:
         msg = _('Organization not found') if is_org else _('Group not found')
@@ -1481,6 +1488,7 @@ def _group_or_org_member_create(context, data_dict, is_org=False):
         'object': user_id,
         'object_type': 'user',
         'capacity': role,
+        'is_keyresearcher': is_keyresearcher
     }
     member_create_context = {
         'model': model,

@@ -314,8 +314,8 @@ class GroupController(base.BaseController):
 
             facets = OrderedDict()
 
-            default_facet_titles = {'organization': _('Organizations'),
-                                    'groups': _('Groups'),
+            default_facet_titles = {'organization': _('Projects'),
+                                    #'groups': _('Groups'),
                                     'tags': _('Tags'),
                                     'res_format': _('Formats'),
                                     'license_id': _('Licenses')}
@@ -648,6 +648,7 @@ class GroupController(base.BaseController):
         return self._render_template('group/confirm_delete.html', group_type)
 
     def members(self, id):
+        log.info("##### CKAN getting members list............ controller > group.py")
         group_type = self._ensure_controller_matches_group_type(id)
 
         context = {'model': model, 'session': model.Session,
@@ -672,6 +673,9 @@ class GroupController(base.BaseController):
         return self._render_template('group/members.html', group_type)
 
     def member_new(self, id):
+
+        log.info("#### CKAN controllers > group.py, is_keyresearcher: ")
+                
         group_type = self._ensure_controller_matches_group_type(id)
 
         context = {'model': model, 'session': model.Session,
@@ -695,12 +699,15 @@ class GroupController(base.BaseController):
                 data_dict['id'] = id
 
                 email = data_dict.get('email')
+                is_keyresearcher = data_dict.get('is_keyresearcher')
 
+                log.info('#### CKAN controllers > group.py, is_keyresearcher: "%s"' % is_keyresearcher)
                 if email:
                     user_data_dict = {
                         'email': email,
                         'group_id': data_dict['id'],
-                        'role': data_dict['role']
+                        'role': data_dict['role'],
+                        'is_keyresearcher': is_keyresearcher
                     }
                     del data_dict['email']
                     user_dict = self._action('user_invite')(
@@ -924,6 +931,8 @@ class GroupController(base.BaseController):
                       extra_vars={'group_type': group_type})
 
     def about(self, id):
+
+        log.info("### CKAN controllers group.py ---> about")
         group_type = self._ensure_controller_matches_group_type(id)
         context = {'model': model, 'session': model.Session,
                    'user': c.user}

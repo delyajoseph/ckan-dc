@@ -46,8 +46,8 @@ def index():
         g.datasets = query['results']
 
         g.facet_titles = {
-            u'organization': _(u'Organizations'),
-            u'groups': _(u'Groups'),
+            u'organization': _(u'Projects'),
+            #u'groups': _(u'Groups'),
             u'tags': _(u'Tags'),
             u'res_format': _(u'Formats'),
             u'license': _(u'Licenses'),

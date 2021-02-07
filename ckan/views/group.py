@@ -301,8 +301,8 @@ def _read(id, limit, group_type):
     facets = OrderedDict()
 
     default_facet_titles = {
-        u'organization': _(u'Organizations'),
-        u'groups': _(u'Groups'),
+        u'organization': _(u'Projects'),
+        #u'groups': _(u'Groups'),
         u'tags': _(u'Tags'),
         u'res_format': _(u'Formats'),
         u'license_id': _(u'Licenses')
@@ -377,6 +377,18 @@ def _update_facet_titles(facets, group_type):
         facets = plugin.group_facets(facets, group_type, None)
     return facets
 
+
+def _get_researcher_dict(id):
+    context = {
+        u'model': model,
+        u'session': model.Session,
+        u'user': g.user,
+        u'for_view': True
+    }
+    try:
+        return _action(u'keyresearcher_info')(context, id)
+    except (NotFound, NotAuthorized):
+        base.abort(404, _(u'Group not found'))
 
 def _get_group_dict(id, group_type):
     u''' returns the result of group_show action or aborts if there is a
@@ -498,10 +510,16 @@ def activity(id, group_type, is_organization, offset=0):
 
 
 def about(id, group_type, is_organization):
+
+    log.info("### CKAN views group.py ---> about")
     extra_vars = {}
     set_org(is_organization)
     context = {u'model': model, u'session': model.Session, u'user': g.user}
     group_dict = _get_group_dict(id, group_type)
+
+    log.info("### CKAN views group.py ---> about, id %s" %id)
+    keyresearcher_list = _get_researcher_dict(id)
+
     group_type = group_dict['type']
     _setup_template_variables(context, {u'id': id}, group_type=group_type)
 
@@ -512,13 +530,16 @@ def about(id, group_type, is_organization):
     g.group_type = group_type
 
     extra_vars = {u"group_dict": group_dict,
-                  u"group_type": group_type}
+                  u"group_type": group_type,
+                  u"key_reseachers" : keyresearcher_list}
 
     return base.render(
         _get_group_template(u'about_template', group_type), extra_vars)
 
 
 def members(id, group_type, is_organization):
+
+    log.info("##### CKAN getting members list............ views > group.py")
     extra_vars = {}
     set_org(is_organization)
     context = {u'model': model, u'session': model.Session, u'user': g.user}
@@ -1073,6 +1094,9 @@ class MembersGroupView(MethodView):
         return context
 
     def post(self, group_type, is_organization, id=None):
+
+        log.info("#### CKAN view > group.py ..... ")
+        
         set_org(is_organization)
         context = self._prepare(id)
         data_dict = clean_dict(
@@ -1080,12 +1104,17 @@ class MembersGroupView(MethodView):
         data_dict['id'] = id
 
         email = data_dict.get(u'email')
-
+        is_keyresearcher = data_dict.get(u'is_keyresearcher') != None
+        data_dict['is_keyresearcher'] = is_keyresearcher
+        
+        log.info('#### CKAN views > group.py, is_keyresearcher: %s' % is_keyresearcher)
+                
         if email:
             user_data_dict = {
                 u'email': email,
                 u'group_id': data_dict['id'],
-                u'role': data_dict['role']
+                u'role': data_dict['role'],
+                u'is_keyresearcher': is_keyresearcher
             }
             del data_dict['email']
             user_dict = _action(u'user_invite')(context, user_data_dict)

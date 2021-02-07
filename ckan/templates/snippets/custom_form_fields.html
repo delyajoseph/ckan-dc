@@ -24,7 +24,7 @@ Example:
   {% endfor %}
 
   {# Add a max of 3 empty columns #}
-  {% set total_extras = extras|count %}
+  {# {% set total_extras = extras|count %}
   {% set empty_extras = (limit or 3) - total_extras %}
   {% if empty_extras <= 0 %}{% set empty_extras = 1 %}{% endif %}
 
@@ -38,5 +38,5 @@ Example:
       values=(extra.key, extra.value, extra.deleted),
       error=errors[prefix ~ 'key'] or errors[prefix ~ 'value']
     ) }}
-  {% endfor %}
+  {% endfor %} #}
 </div>
