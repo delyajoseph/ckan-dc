@@ -67,7 +67,7 @@ entry_points = {
         'sql = ckan.lib.search.sql:SqlSearchBackend',
         'solr = ckan.lib.search.solr_backend:SolrSearchBackend',
     ],
-    'ins': [
+    'ckan.plugins': [
         'synchronous_search = ckan.lib.search:SynchronousSearchPlugin',
         'stats = ckanext.stats.plugin:StatsPlugin',
         'publisher_form = ckanext.publisher_form.forms:PublisherForm',
