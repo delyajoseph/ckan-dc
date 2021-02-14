@@ -8033,8 +8033,8 @@ fieldset[disabled] .control-custom.disabled .checkbox.btn.focus {
 }
 .stages li.active:after {
   border-color: rgba(140, 198, 138, 0);
-  border-top-color: #8cc68a;
-  border-bottom-color: #8cc68a;
+  border-top-color: #f27221;
+  border-bottom-color: #f27221;
 }
 .stages li.complete:after {
   border-color: rgba(197, 226, 196, 0);
@@ -8049,11 +8049,11 @@ fieldset[disabled] .control-custom.disabled .checkbox.btn.focus {
   background: none;
 }
 .stages li.active:before {
-  color: #8cc68a;
+  color: #f27221;
   background: #fff;
 }
 .stages li.complete:before {
-  color: #c5e2c4;
+  color: ##f27221;
   background: #eef6ed;
 }
 .stages li .highlight {
@@ -8078,11 +8078,11 @@ fieldset[disabled] .control-custom.disabled .checkbox.btn.focus {
 }
 .stages li.active .highlight {
   color: #fff;
-  background: #8cc68a;
+  background: #f27221;
 }
 .stages li.complete .highlight {
   color: #eef6ed;
-  background: #c5e2c4;
+  background: #ee9c69;
 }
 .alert > :last-child {
   margin-bottom: 0;
