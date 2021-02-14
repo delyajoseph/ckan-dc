@@ -41,7 +41,48 @@
   {{ form.markdown('description', id='field-description', label=_('Summary of data in the file'), placeholder=_('Some useful summary of data in the file'), value=data.description, error=errors.description) }}
   {% endblock %}
  
-    
+  {% block basic_fields_rights %}
+
+  <div class="form-group">
+    {% set error = errors.rights_id %}
+    <label class="control-label" style="padding-top: 25px;" for="field-rights">{{ _("Access rights") }}
+    </label>
+    <div class="controls">
+      <div class="row">
+        <div class="col-md-6">
+          <select id="field-rights" name="resource_rights">
+            {% set existing_rights = data.get('resource_rights') %}
+            {% set empty_rights = _('Please select the access right') %}
+            <option value="">{{ empty_rights }}</option>
+            <option value="1" {% if existing_rights == '1' %} selected="selected"{% endif %}>Project group</option>
+            <option value="2" {% if existing_rights == '2' %} selected="selected"{% endif %}>MinExCRC</option>
+
+          </select>
+        </div>
+      </div>
+    </div>
+
+  {% endblock %} 
+
+  {% block basic_fields_restrDetails %}
+    {{ form.input('restrDetails', id='field-restrDetails', label=_('Restriction details'), placeholder=_('Details about restrictions'), value=data.restrDetails, error=errors.restrDetails, classes=['control-full']) }}
+  {% endblock %}
+
+  <div>
+    <h4 class="control-label" for="ownership">Data Ownership</h4>
+  </div>
+
+
+
+{% block basic_fields_upln %}
+{{ form.input('upln', id='field-upln', label=_('Uploader Name'), placeholder=_('Uploader name'), value=data.upln, error=errors.upln, classes=['control-full']) }}
+{% endblock %}
+
+
+{% block basic_fields_uplemail %}
+{{ form.input('uplemail', id='field-uplemail', label=_('Uploader Email'), placeholder=_('Uploader Email'), value=data.uplemail, error=errors.uplemail, classes=['control-full']) }}
+{% endblock %}
+
     <!--{% block basic_fields_format %}
       {% set format_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/resource/format_autocomplete?incomplete=?'} %}
       {% call form.input('format', id='field-format', label=_('Format'), placeholder=_('eg. CSV, XML or JSON'), value=data.format, error=errors.format, classes=['control-medium'], attrs=format_attrs) %}-->
