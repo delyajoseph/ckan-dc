@@ -29,6 +29,7 @@ member_table = Table('member', meta.metadata,
                             ForeignKey('group.id')),
                      Column('state', types.UnicodeText,
                             default=core.State.ACTIVE),
+                     Column('is_keyresearcher', types.Boolean, default=False),
                      )
 
 
@@ -39,6 +40,12 @@ group_table = Table('group', meta.metadata,
                     Column('name', types.UnicodeText,
                            nullable=False, unique=True),
                     Column('title', types.UnicodeText),
+                    Column('pgmln', types.UnicodeText),
+                    Column('pgmlc', types.UnicodeText),
+                    Column('pgmle', types.UnicodeText),
+                    Column('prjln', types.UnicodeText),
+                    Column('prjlc', types.UnicodeText),
+                    Column('prjle', types.UnicodeText),
                     Column('type', types.UnicodeText,
                            nullable=False),
                     Column('description', types.UnicodeText),
@@ -70,13 +77,14 @@ class Member(core.StatefulObjectMixin,
                  - capacity is 'parent'
     '''
     def __init__(self, group=None, table_id=None, group_id=None,
-                 table_name=None, capacity='public', state='active'):
+                 table_name=None, capacity='public', state='active', is_keyresearcher=None):
         self.group = group
         self.group_id = group_id
         self.table_id = table_id
         self.table_name = table_name
         self.capacity = capacity
         self.state = state
+        self.is_keyresearcher = is_keyresearcher
 
     @classmethod
     def get(cls, reference):
@@ -105,19 +113,25 @@ class Member(core.StatefulObjectMixin,
         else:
             table_info = 'table_name=%s table_id=%s' % (self.table_name,
                                                         self.table_id)
-        return u'<Member group=%s %s capacity=%s state=%s>' % \
+        return u'<Member group=%s %s capacity=%s state=%s is_keyresearcher=%s>' % \
                (self.group.name if self.group else repr(self.group),
-                table_info, self.capacity, self.state)
+                table_info, self.capacity, self.state, self.is_keyresearcher)
 
 
 class Group(core.StatefulObjectMixin,
             domain_object.DomainObject):
 
-    def __init__(self, name=u'', title=u'', description=u'', image_url=u'',
+    def __init__(self, name=u'', title=u'', pgmln=u'',pgmlc=u'',pgmle=u'', prjln=u'',prjlc=u'',prjle=u'',description=u'', image_url=u'',
                  type=u'group', approval_status=u'approved',
                  is_organization=False):
         self.name = name
         self.title = title
+        self.pgmln = pgmln
+        self.pgmlc = pgmlc
+        self.pgmle = pgmle
+        self.prjln = prjln
+        self.prjlc = prjlc
+        self.prjle = prjle
         self.description = description
         self.image_url = image_url
         self.type = type

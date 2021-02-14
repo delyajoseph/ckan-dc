@@ -4,6 +4,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
@@ -3197,25 +3198,25 @@ fieldset[disabled] .btn-default.focus {
 }
 .btn-primary {
   color: #fff;
-  background-color: #206b82;
-  border-color: #1b5a6e;
+  background-color: #f27221;
+  border-color: #f27221;
 }
 .btn-primary:focus,
 .btn-primary.focus {
   color: #fff;
-  background-color: #164959;
+  background-color: #f27221;
   border-color: #020607;
 }
 .btn-primary:hover {
   color: #fff;
-  background-color: #164959;
+  background-color: #f27221;
   border-color: #0f323c;
 }
 .btn-primary:active,
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
   color: #fff;
-  background-color: #164959;
+  background-color: #f27221;
   background-image: none;
   border-color: #0f323c;
 }
@@ -8032,8 +8033,8 @@ fieldset[disabled] .control-custom.disabled .checkbox.btn.focus {
 }
 .stages li.active:after {
   border-color: rgba(140, 198, 138, 0);
-  border-top-color: #8cc68a;
-  border-bottom-color: #8cc68a;
+  border-top-color: #f27221;
+  border-bottom-color: #f27221;
 }
 .stages li.complete:after {
   border-color: rgba(197, 226, 196, 0);
@@ -8048,11 +8049,11 @@ fieldset[disabled] .control-custom.disabled .checkbox.btn.focus {
   background: none;
 }
 .stages li.active:before {
-  color: #8cc68a;
+  color: #f27221;
   background: #fff;
 }
 .stages li.complete:before {
-  color: #c5e2c4;
+  color: ##f27221;
   background: #eef6ed;
 }
 .stages li .highlight {
@@ -8077,11 +8078,11 @@ fieldset[disabled] .control-custom.disabled .checkbox.btn.focus {
 }
 .stages li.active .highlight {
   color: #fff;
-  background: #8cc68a;
+  background: #f27221;
 }
 .stages li.complete .highlight {
   color: #eef6ed;
-  background: #c5e2c4;
+  background: #ee9c69;
 }
 .alert > :last-child {
   margin-bottom: 0;
@@ -9454,7 +9455,7 @@ h4 small {
 [role=main],
 .main {
   position: relative;
-  padding-bottom: 20px;
+  /*padding-bottom: 20px;*/
 }
 @media (min-width: 768px) {
   .main {
@@ -9797,7 +9798,7 @@ h4 small {
 }
 @media (min-width: 992px) {
   .homepage [role=main] {
-    padding: 20px 0;
+    /*padding: 20px 0;*/
   }
   .homepage.layout-1 .row1 .col2 {
     position: absolute;
@@ -10066,7 +10067,7 @@ h4 small {
   margin-bottom: initial;
   padding: 10px 0;
   color: #fff;
-  background: #005d7a url("../../../base/images/bg.png");
+  background: #002f41 url("../../../base/images/bg.png");
   padding: 20px 0;
 }
 .site-footer:before,
@@ -10893,3 +10894,4 @@ iframe {
 .reduced-padding {
   padding: 3px 5px;
 }
+

@@ -7,6 +7,7 @@ import random
 import re
 from socket import error as socket_error
 import datetime
+import json
 
 import six
 
@@ -138,7 +139,7 @@ def package_create(context, data_dict):
     session = context['session']
     user = context['user']
 
-    log.info("################### CKAN create.py ---- package_create")
+    #log.info("################### CKAN create.py ---- package_create")
     if 'type' not in data_dict:
         package_plugin = lib_plugins.lookup_package_plugin()
         try:
@@ -157,7 +158,7 @@ def package_create(context, data_dict):
     else:
         schema = package_plugin.create_package_schema()
 
-    log.info('###### CKAN create.py --- CreateView')
+    #log.info('###### CKAN create.py --- CreateView')
     _check_access('package_create', context, data_dict)
 
     if 'api_version' not in context:
@@ -581,8 +582,8 @@ def member_create(context, data_dict=None):
     model = context['model']
     user = context['user']
 
-    group_id, obj_id, obj_type, capacity = \
-        _get_or_bust(data_dict, ['id', 'object', 'object_type', 'capacity'])
+    group_id, obj_id, obj_type, capacity, is_keyresearcher = \
+        _get_or_bust(data_dict, ['id', 'object', 'object_type', 'capacity', 'is_keyresearcher'])
 
     group = model.Group.get(group_id)
     if not group:
@@ -613,8 +614,10 @@ def member_create(context, data_dict=None):
         member = model.Member(table_name=obj_type,
                               table_id=obj.id,
                               group_id=group.id,
-                              state='active')
+                              state='active',
+                              is_keyresearcher=is_keyresearcher)
         member.group = group
+    
     member.capacity = capacity
 
     model.Session.add(member)
@@ -695,10 +698,15 @@ def package_collaborator_create(context, data_dict):
 
 
 def _group_or_org_create(context, data_dict, is_org=False):
+
+    #log.info("#### CKAN action --> create.py -- _group_or_org_create")
+    for key, value in data_dict.items():
+    #log.info('### CKAN json data_dict key -- %s : %s ' % (key,value))
     model = context['model']
     user = context['user']
     session = context['session']
     data_dict['is_organization'] = is_org
+   # data_dict['users'][1].is_keyresearcher = False
 
     upload = uploader.get_uploader('group')
     upload.update_data_dict(data_dict, 'image_url',
@@ -724,7 +732,7 @@ def _group_or_org_create(context, data_dict, is_org=False):
     data, errors = lib_plugins.plugin_validate(
         group_plugin, context, data_dict, schema,
         'organization_create' if is_org else 'group_create')
-    log.debug('group_create validate_errs=%r user=%s group=%s data_dict=%r',
+    log.error('group_create validate_errs=%r user=%s group=%s data_dict=%r',
               errors, context.get('user'), data_dict.get('name'), data_dict)
 
     if errors:
@@ -782,6 +790,7 @@ def _group_or_org_create(context, data_dict, is_org=False):
         'object': user_id,
         'object_type': 'user',
         'capacity': 'admin',
+        'is_keyresearcher' : False
     }
     member_create_context = {
         'model': model,
@@ -1452,6 +1461,8 @@ def follow_dataset(context, data_dict):
 def _group_or_org_member_create(context, data_dict, is_org=False):
     # creator of group/org becomes an admin
     # this needs to be after the repo.commit or else revisions break
+
+    #log.info('### CKAN action > create.py > _group_or_org_member_create')
     model = context['model']
     user = context['user']
     session = context['session']
@@ -1465,6 +1476,9 @@ def _group_or_org_member_create(context, data_dict, is_org=False):
     username = _get_or_bust(data_dict, 'username')
     role = data_dict.get('role')
     group_id = data_dict.get('id')
+    is_keyresearcher = data_dict.get('is_keyresearcher')
+
+    #log.info('### CKAN action > create.py > _group_or_org_member_create %s' % is_keyresearcher)
     group = model.Group.get(group_id)
     if not group:
         msg = _('Organization not found') if is_org else _('Group not found')
@@ -1481,6 +1495,7 @@ def _group_or_org_member_create(context, data_dict, is_org=False):
         'object': user_id,
         'object_type': 'user',
         'capacity': role,
+        'is_keyresearcher': is_keyresearcher
     }
     member_create_context = {
         'model': model,
