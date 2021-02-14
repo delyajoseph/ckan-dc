@@ -182,7 +182,7 @@ def current_package_list_with_resources(context, data_dict):
 
 def member_list(context, data_dict=None):
 
-    log.info("#### CKAN getting members list............ action > get.py")
+    #log.info("#### CKAN getting members list............ action > get.py")
     '''Return the members of a group.
 
     The user must have permission to 'get' the group.
@@ -643,7 +643,7 @@ def keyresearcher_info(context,id):
     group_id = group_q.first().id
     #group_id = group_q.id
 
-    log.info("### CKAN action get.py, group_id %s" %group_id)
+    #log.info("### CKAN action get.py, group_id %s" %group_id)
     q = model.Session.query(model.Member) \
         .filter(model.Member.table_name == 'user') \
         .filter(model.Member.state == 'active') \
@@ -670,14 +670,14 @@ def keyresearcher_info(context,id):
         keylist.append({"id" : user.id, "name" : user.fullname, 
         "organisation" : user.organisation, "contact" : user.contact, "email" : user.email})
     
-    log.info('### CKAN json keyre %s' % json.dumps(keylist))
+    #log.info('### CKAN json keyre %s' % json.dumps(keylist))
 
     return keylist
    
 
 def organization_keyresearcher_list(context, data_dict):
 
-    log.info('#### CKAN get.py > organization_keyresearcher_list')
+    #log.info('#### CKAN get.py > organization_keyresearcher_list')
     model = context['model']
     if data_dict.get('id'):
         user_obj = model.User.get(data_dict['id'])
@@ -696,7 +696,13 @@ def organization_keyresearcher_list(context, data_dict):
                 .filter(model.Member.state == 'active') \
                 .filter(model.Member.table_id == user_id)
 
-    group_id = group_q[0].group_id
+    #group_id = group_q[0].group_id
+
+    loginUserId_Groups = []
+    for group in group_q:    
+        loginUserId_Groups.append(group.group_id)
+
+    #log.info('########### CKAN get.py ---> %s' % loginUserId_Groups)
     users_q = model.Session.query(model.User) \
         .filter(model.User.state == 'active')
    
@@ -705,12 +711,14 @@ def organization_keyresearcher_list(context, data_dict):
         .filter(model.Member.table_name == 'user') \
         .filter(model.Member.state == 'active') \
         .filter(model.Member.is_keyresearcher == 'True') \
-        .filter(model.Member.group_id == group_id)
+        .filter(model.Member.group_id.in_(loginUserId_Groups))
 
     keyresearcher_ids = set()
     keyresearchers_list = {}
+    kr_grp_dict = dict()
     for member in q.all():
         keyresearcher_ids.add(member.table_id)
+        kr_grp_dict[member.table_id] = member.group_id
 
 
     if not keyresearcher_ids:
@@ -720,7 +728,7 @@ def organization_keyresearcher_list(context, data_dict):
         
     keylist = [] 
     for user in users_q:
-        keylist.append({"id" : user.id, "name" : user.fullname, "organisation" : user.organisation})
+        keylist.append({"id" : user.id, "name" : user.fullname, "organisation" : user.organisation, "group_id" : kr_grp_dict.pop(user.id)})
     
     #log.info('### CKAN json keyre %s' % json.dumps(keylist))
 

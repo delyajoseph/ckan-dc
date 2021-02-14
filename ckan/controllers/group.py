@@ -456,6 +456,10 @@ class GroupController(base.BaseController):
         h.redirect_to(group_type + '_bulk_process', id=id)
 
     def new(self, data=None, errors=None, error_summary=None):
+
+        #log.info('#### CKAN controllers > group.py')
+        
+
         if data and 'type' in data:
             group_type = data['type']
         else:
@@ -535,6 +539,7 @@ class GroupController(base.BaseController):
                       extra_vars={'group_type': group_type})
 
     def _save_new(self, context, group_type=None):
+        #log.info("#### CKAN controllers --> group.py -- _save_new")
         try:
             data_dict = clean_dict(dict_fns.unflatten(
                 tuplize_dict(parse_params(request.params))))
@@ -701,7 +706,7 @@ class GroupController(base.BaseController):
                 email = data_dict.get('email')
                 is_keyresearcher = data_dict.get('is_keyresearcher')
 
-                log.info('#### CKAN controllers > group.py, is_keyresearcher: "%s"' % is_keyresearcher)
+                #log.info('#### CKAN controllers > group.py, is_keyresearcher: "%s"' % is_keyresearcher)
                 if email:
                     user_data_dict = {
                         'email': email,
