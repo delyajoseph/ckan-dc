@@ -511,13 +511,13 @@ def activity(id, group_type, is_organization, offset=0):
 
 def about(id, group_type, is_organization):
 
-    log.info("### CKAN views group.py ---> about")
+    #log.info("### CKAN views group.py ---> about")
     extra_vars = {}
     set_org(is_organization)
     context = {u'model': model, u'session': model.Session, u'user': g.user}
     group_dict = _get_group_dict(id, group_type)
 
-    log.info("### CKAN views group.py ---> about, id %s" %id)
+    #log.info("### CKAN views group.py ---> about, id %s" %id)
     keyresearcher_list = _get_researcher_dict(id)
 
     group_type = group_dict['type']
@@ -539,7 +539,7 @@ def about(id, group_type, is_organization):
 
 def members(id, group_type, is_organization):
 
-    log.info("##### CKAN getting members list............ views > group.py")
+    #log.info("##### CKAN getting members list............ views > group.py")
     extra_vars = {}
     set_org(is_organization)
     context = {u'model': model, u'session': model.Session, u'user': g.user}
@@ -1095,7 +1095,7 @@ class MembersGroupView(MethodView):
 
     def post(self, group_type, is_organization, id=None):
 
-        log.info("#### CKAN view > group.py ..... ")
+        #log.info("#### CKAN view > group.py ..... ")
         
         set_org(is_organization)
         context = self._prepare(id)
@@ -1107,7 +1107,7 @@ class MembersGroupView(MethodView):
         is_keyresearcher = data_dict.get(u'is_keyresearcher') != None
         data_dict['is_keyresearcher'] = is_keyresearcher
         
-        log.info('#### CKAN views > group.py, is_keyresearcher: %s' % is_keyresearcher)
+        #log.info('#### CKAN views > group.py, is_keyresearcher: %s' % is_keyresearcher)
                 
         if email:
             user_data_dict = {

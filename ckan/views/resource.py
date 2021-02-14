@@ -263,7 +263,7 @@ class CreateView(MethodView):
                 404, _(u'The dataset {id} could not be found.').format(id=id)
             )
         if save_action == u'go-metadata':
-            log.info("#### CKAN resource.py ---- go-metadata")
+            #log.info("#### CKAN resource.py ---- go-metadata")
             # XXX race condition if another user edits/deletes
             data_dict = get_action(u'package_show')(context, {u'id': id})
             get_action(u'package_update')(
@@ -272,14 +272,14 @@ class CreateView(MethodView):
             )
             return h.redirect_to(u'{}.read'.format(package_type), id=id)
         elif save_action == u'go-dataset':
-            log.info("#### CKAN resource.py ---- go-dataset")
+            #log.info("#### CKAN resource.py ---- go-dataset")
             # go to first stage of add dataset
             return h.redirect_to(u'{}.edit'.format(package_type), id=id)
         elif save_action == u'go-dataset-complete':
-            log.info("#### CKAN resource.py ------ go-dataset-complete")
+            #log.info("#### CKAN resource.py ------ go-dataset-complete")
             return h.redirect_to(u'{}.read'.format(package_type), id=id)
         else:
-            log.info("#### CKAN resource.py ---- save_action else stmt")
+            #log.info("#### CKAN resource.py ---- save_action else stmt")
             # add more resources
             return h.redirect_to(
                 u'{}_resource.new'.format(package_type),
