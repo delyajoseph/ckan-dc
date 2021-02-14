@@ -700,8 +700,10 @@ def package_collaborator_create(context, data_dict):
 def _group_or_org_create(context, data_dict, is_org=False):
 
     #log.info("#### CKAN action --> create.py -- _group_or_org_create")
-    for key, value in data_dict.items():
-    #log.info('### CKAN json data_dict key -- %s : %s ' % (key,value))
+
+    #for key, value in data_dict.items():
+        #log.info('### CKAN json data_dict key -- %s : %s ' % (key,value))
+
     model = context['model']
     user = context['user']
     session = context['session']
