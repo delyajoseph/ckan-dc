@@ -99,7 +99,7 @@
           
           
           {% if loop.index == 1 %}
-          <option value="null" {% if not selected_org %} selected="selected" {% endif %}>{{ _('No organization') }} ----{{selected_org}}---</option>
+          <option value="null" {% if not selected_org %} selected="selected" {% endif %}>--- Select Organisation ---</option>
           {% endif %}
           
           <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.display_name }}</option>
