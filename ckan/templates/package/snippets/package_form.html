@@ -1,5 +1,8 @@
 {% import 'macros/form.html' as form %}
 {% set action = g.form_action or '' %}
+{% macro sentence_case(text) %}
+{{ text[0]|upper}}{{text[1:] }}
+{% endmacro %}
 
 {# This provides a full page that renders a form for adding a dataset. It can
 then itself be extended to add/remove blocks of functionality. #}
@@ -70,37 +73,26 @@ then itself be extended to add/remove blocks of functionality. #}
     {% block basic_fields_dataType %}
     {% set existing_dataType = data.get('dataType') %}
     {% set existing_dataTypeInfo = data.get('dataTypeInfo') %}
+    {% set datatype_list = ['generic', 'softwareSpecific', 'prop'] %}
+   
+
+   
 
     <div class="form-group">
       <label for="field-keyresearcher" class="control-label">{{ _('Data Type') }}</label>
       <div class="controls">
         <div class="row">
           <div class="col-md-12">
-            {%  if existing_dataType == 'generic' %}
-            <input type="radio" id="genericr" name="dataType" value="generic" checked onclick="show(1)" />&nbsp;Generic
-            {% else %}
-            <input type="radio" id="genericr" name="dataType" value="generic" onclick="show(1)" />&nbsp;Generic
+            {% if not existing_dataType  %}
+            {% set is_new = 'True' %}
             {% endif %}
-
-            {% if existing_dataType == 'softwareSpecific' %}
-            <input type="radio" id="softwareSpecificr" name="dataType" value="softwareSpecific" checked
-              onclick="show(2)" />&nbsp;Software specific
-            {% else %}
-            <input type="radio" id="softwareSpecificr" name="dataType" value="softwareSpecific"
-              onclick="show(2)" />&nbsp;Software specific
-            {% endif %}
-
-            {% if existing_dataType == 'prop' %}
-            <input type="radio" id="propr" name="dataType" value="prop" checked onclick="show(3)" />&nbsp;Propreitor
-            {% else %}
-            <input type="radio" id="propr" name="dataType" value="prop" onclick="show(3)" />&nbsp;Propreitor
-            {% endif %}
+            {% for dt in datatype_list %}
+            <input type="radio" id="{{dt}}r" name="dataType" value="{{dt}}" {% if existing_dataType == dt %} checked {% elif loop.index==1 and is_new=='True' %} checked  {% endif %} onclick="show('{{dt}}')" />{{ sentence_case(dt) }}&nbsp;&nbsp;
+            {% endfor %}
           </div>
         </div>
       </div>
     </div>
-
-    
     <div class="form-group control-full">
       <div class="controls ">
         <input id="datatype" type="text" name="dataTypeInfo" {% if existing_dataTypeInfo %}
@@ -122,34 +114,17 @@ then itself be extended to add/remove blocks of functionality. #}
 
 
     <div class="radio" style="display: inline;">
-
+      {% set storage_list = ['cloud', 'desktop', 'organisation'] %}
       {% set existing_storage = data.get('storage') %}
-
-
-      {% if existing_storage == 'cloud' %}
-      {{ h.radio('storage', 'cloud', true) }}
-      {% else %}
-      {{ h.radio('storage', 'cloud', false) }}
+      {% if not existing_dataType  %}
+      {% set is_new = 'True' %}
       {% endif %}
-      <label>Cloud</label>
-      {% if existing_storage == 'desktop' %}
-      {{ h.radio('storage', 'desktop', true) }}
-      {% else %}
-      {{ h.radio('storage', 'desktop', false) }}
-      {% endif %}
-      <label>Desktop</label>
 
-      {% if existing_storage == 'organisation' %}
-      {{ h.radio('storage', 'organisation', true) }}
-      {% else %}
-      {{ h.radio('storage', 'organisation', false) }}
-      {% endif %}
-      <label>Organisation</label>
-
-
+      {% for strg in storage_list %}
+        <input type="radio" name="storage" value="{{strg}}" {% if existing_storage == strg %} checked {% elif loop.index==1 and is_new=='True' %} checked {% endif %} />{{ sentence_case(strg) }} &nbsp;&nbsp;
+      {% endfor %}
 
     </div>
-
 
     {% endblock %}
 
