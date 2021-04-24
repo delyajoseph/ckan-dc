@@ -54,9 +54,12 @@ from ckan.model.user import (
 from ckan.model.group import (
     Member,
     Group,
+    Milestone,
     group_table,
-    member_table,
+    member_table, 
+    milestone_table,
 )
+
 from ckan.model.group_extra import (
     GroupExtra,
     group_extra_table,

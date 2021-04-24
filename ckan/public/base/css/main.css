@@ -3251,19 +3251,19 @@ fieldset[disabled] .btn-primary.focus {
 }
 .btn-success {
   color: #fff;
-  background-color: #3A833A;
-  border-color: #327132;
+  background-color:#f27221;
+  border-color: #f27221;
 }
 .btn-success:focus,
 .btn-success.focus {
   color: #fff;
-  background-color: #2a602a;
+  background-color: #f27221;
   border-color: #0b190b;
 }
 .btn-success:hover {
   color: #fff;
-  background-color: #2a602a;
-  border-color: #1f471f;
+  background-color: #f27221;
+  border-color: #f27221;
 }
 .btn-success:active,
 .btn-success.active,
@@ -3295,11 +3295,11 @@ fieldset[disabled] .btn-success:focus,
 .btn-success.disabled.focus,
 .btn-success[disabled].focus,
 fieldset[disabled] .btn-success.focus {
-  background-color: #3A833A;
-  border-color: #327132;
+  background-color: #f27221;
+  border-color: #f27221;
 }
 .btn-success .badge {
-  color: #3A833A;
+  color:#f27221;
   background-color: #fff;
 }
 .btn-info {
@@ -4938,7 +4938,7 @@ a.label:focus {
   background-color: #164959;
 }
 .label-success {
-  background-color: #3A833A;
+  background-color:#f27221;
 }
 .label-success[href]:hover,
 .label-success[href]:focus {
@@ -5209,7 +5209,7 @@ a.thumbnail.active {
   animation: progress-bar-stripes 2s linear infinite;
 }
 .progress-bar-success {
-  background-color: #3A833A;
+  background-color: #f27221;
 }
 .progress-striped .progress-bar-success {
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);

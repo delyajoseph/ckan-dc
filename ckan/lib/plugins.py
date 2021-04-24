@@ -571,6 +571,9 @@ class DefaultOrganizationForm(DefaultGroupForm):
     def bulk_process_template(self):
         return 'organization/bulk_process.html'
 
+    def milestone_template(self):
+        return 'organization/milestone.html'
+
     def read_template(self):
         return 'organization/read.html'
 

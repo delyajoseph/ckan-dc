@@ -23,13 +23,15 @@ logger = logging.getLogger(__name__)
 
 __all__ = ['Package', 'package_table', 'PackageMember', 'package_member_table',
            'PACKAGE_NAME_MAX_LENGTH', 'PACKAGE_NAME_MIN_LENGTH',
-           'PACKAGE_VERSION_MAX_LENGTH',
+           'PACKAGE_VERSION_MAX_LENGTH','PACKAGE_DATATYPE_MAX_LENGTH','PACKAGE_DATATYPE_MIN_LENGTH',
            ]
 
 
 PACKAGE_NAME_MAX_LENGTH = 100
 PACKAGE_NAME_MIN_LENGTH = 2
 PACKAGE_VERSION_MAX_LENGTH = 100
+PACKAGE_DATATYPE_MAX_LENGTH = 100
+PACKAGE_DATATYPE_MIN_LENGTH = 2
 
 
 # Our Domain Object Tables

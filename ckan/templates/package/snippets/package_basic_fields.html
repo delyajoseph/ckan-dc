@@ -92,17 +92,17 @@
     <div class="form-group control-medium">
       <label for="field-organizations" class="control-label">{{ _('Projects') }}</label>
       <div class="controls">
-        <select id="field-organizations" name="owner_org"  class="form-control" onchange="update_key_researcher(this, null)">
+        <select id="field-organizations" name="owner_org"  class="form-control" onchange="update_key_researcher(this, null); update_ppt()">
           {% for organization in organizations_available %}
           {# get out first org from users list only if there is not an existing org #}
           {% set selected_org = (existing_org and existing_org == organization.id) %}
           
           
           {% if loop.index == 1 %}
-          <option value="null" {% if not selected_org %} selected="selected" {% endif %}>--- Select Organisation ---</option>
+          <option value="null" {% if not selected_org %} selected="selected" {% endif %}>--- Select Project ---</option>
           {% endif %}
           
-          <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.display_name }}</option>
+          <option value="{{ organization.id }}" data-abstract="{{organization.abstract}}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.display_name }}</option>
           {% endfor %}
         </select>
       </div>

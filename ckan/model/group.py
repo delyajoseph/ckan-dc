@@ -13,12 +13,11 @@ from ckan.model import user as _user
 
 __all__ = ['group_table', 'Group',
            'Member',
-           'member_table']
+           'member_table', 'Milestone', 'milestone_table']
 
 member_table = Table('member', meta.metadata,
-                     Column('id', types.UnicodeText,
-                            primary_key=True,
-                            default=_types.make_uuid),
+                     Column('id', types.Integer,
+                            primary_key=True),
                      Column('table_name', types.UnicodeText,
                             nullable=False),
                      Column('table_id', types.UnicodeText,
@@ -46,6 +45,8 @@ group_table = Table('group', meta.metadata,
                     Column('prjln', types.UnicodeText),
                     Column('prjlc', types.UnicodeText),
                     Column('prjle', types.UnicodeText),
+                    Column('abstract', types.UnicodeText),
+                    
                     Column('type', types.UnicodeText,
                            nullable=False),
                     Column('description', types.UnicodeText),
@@ -59,7 +60,34 @@ group_table = Table('group', meta.metadata,
                            default=core.State.ACTIVE),
                     )
 
+milestone_table = Table('milestone', meta.metadata,
+                     Column('id', types.Integer,
+                            primary_key=True),
+                     Column('group_id', types.UnicodeText),
+                     Column('m_id', types.UnicodeText),
+                     Column('m_due', types.UnicodeText),
+                     Column('m_stmt', types.UnicodeText)
+                     )
 
+                     
+class Milestone(core.StatefulObjectMixin, 
+            domain_object.DomainObject):
+
+    def __init__(self, m_id=None, group_id=None,
+                 m_due=None, m_stmt=None):
+       self.m_id = m_id
+       self.group_id = group_id
+       self.m_due = m_due
+       self.m_stmt = m_stmt
+
+    @classmethod
+    def get(cls, id, context=None):
+        
+        query = meta.Session.query(cls)
+        query = query.filter(Milestone.group_id == id)
+        return query
+
+   
 class Member(core.StatefulObjectMixin,
              domain_object.DomainObject):
     '''A Member object represents any other object being a 'member' of a
@@ -121,7 +149,7 @@ class Member(core.StatefulObjectMixin,
 class Group(core.StatefulObjectMixin,
             domain_object.DomainObject):
 
-    def __init__(self, name=u'', title=u'', pgmln=u'',pgmlc=u'',pgmle=u'', prjln=u'',prjlc=u'',prjle=u'',description=u'', image_url=u'',
+    def __init__(self, name=u'', title=u'', pgmln=u'',pgmlc=u'',pgmle=u'', prjln=u'',prjlc=u'',prjle=u'',description=u'',abstract=u'', image_url=u'',
                  type=u'group', approval_status=u'approved',
                  is_organization=False):
         self.name = name
@@ -132,6 +160,7 @@ class Group(core.StatefulObjectMixin,
         self.prjln = prjln
         self.prjlc = prjlc
         self.prjle = prjle
+        self.abstract = abstract
         self.description = description
         self.image_url = image_url
         self.type = type
@@ -160,6 +189,7 @@ class Group(core.StatefulObjectMixin,
         """
         Returns all groups.
         """
+        log.info('group type in group.py')
         q = meta.Session.query(cls)
         if state:
             q = q.filter(cls.state.in_(state))
@@ -270,6 +300,8 @@ class Group(core.StatefulObjectMixin,
         return [group for group in all_groups
                 if group.name not in excluded_groups]
 
+
+
     def packages(self, with_private=False, limit=None,
             return_query=False, context=None):
         '''Return this group's active packages.
@@ -362,7 +394,7 @@ class Group(core.StatefulObjectMixin,
         return '<Group %s>' % self.name
 
 meta.mapper(Group, group_table)
-
+meta.mapper(Milestone, milestone_table)
 meta.mapper(Member, member_table, properties={
     'group': orm.relation(Group,
                           backref=orm.backref('member_all',

@@ -832,6 +832,113 @@ class BulkProcessView(MethodView):
             base.abort(403, _(u'Not authorized to perform bulk update'))
         return h.redirect_to(u'{}.bulk_process'.format(group_type), id=id)
 
+class MilestoneView(MethodView):
+    u'''  Miestone view'''
+
+    def _prepare(self, group_type, id=None):
+
+        # check we are org admin
+
+        context = {
+            u'model': model,
+            u'session': model.Session,
+            u'user': g.user,
+            u'schema': _db_to_form_schema(group_type=group_type),
+            u'for_view': True,
+            u'extras_as_string': True
+        }
+        return context
+
+    def get(self, id, group_type, is_organization):
+        extra_vars = {}
+        set_org(is_organization)
+        context = self._prepare(group_type, id)
+        log.info('group.py --- organisation id id is "%s"'% (id))
+        #log.info('group.py --- organisation id is organisation"%s"'% (is_organization))
+        group_dict = _action(u'group_show')(context, {u'id': id})
+        data_dict = {u'id': id}
+        try:
+            milestone_list = _action(u'milestone_show')(context, data_dict)
+            #group = context['group']
+        except NotFound:
+            base.abort(404, _(u'Group not found'))
+
+        g.group_dict = group_dict
+        g.milestone_list = milestone_list
+       
+        extra_vars = {
+            u"group_dict": group_dict,
+            u"milestone_list": milestone_list
+        }
+        return base.render(
+            _get_group_template(u'milestone_template', extra_vars))
+
+    def post(self, id, group_type, is_organization, data=None):
+        set_org(is_organization)
+        context = self._prepare(group_type)
+        data_dict = {u'id': id, u'type': group_type}
+        try:
+            check_access(u'bulk_update_public', context, {u'org_id': id})
+            # Do not query for the group datasets when dictizing, as they will
+            # be ignored and get requested on the controller anyway
+            data_dict['include_datasets'] = False
+            group_dict = _action(u'group_show')(context, data_dict)
+            group = context['group']
+        except NotFound:
+            base.abort(404, _(u'Group not found'))
+        except NotAuthorized:
+            base.abort(403,
+                       _(u'User %r not authorized to edit %s') % (g.user, id))
+
+        if not group_dict['is_organization']:
+            # FIXME: better error
+            raise Exception(u'Must be an organization')
+
+        # TODO: Remove
+        # ckan 2.9: Adding variables that were removed from c object for
+        # compatibility with templates in existing extensions
+        g.group_dict = group_dict
+        g.group = group
+
+        # use different form names so that ie7 can be detected
+        form_names = set([
+            u"bulk_action.public",
+            u"bulk_action.delete",
+            u"bulk_action.private"
+        ])
+        actions_in_form = set(request.form.keys())
+        actions = form_names.intersection(actions_in_form)
+        # ie7 puts all buttons in form params but puts submitted one twice
+
+        for key, value in six.iteritems(request.form.to_dict()):
+            if value in [u'private', u'public']:
+                action = key.split(u'.')[-1]
+                break
+        else:
+            # normal good browser form submission
+            action = actions.pop().split(u'.')[-1]
+
+        # process the action first find the datasets to perform the action on.
+        # they are prefixed by dataset_ in the form data
+        datasets = []
+        for param in request.form:
+            if param.startswith(u'dataset_'):
+                datasets.append(param[8:])
+
+        action_functions = {
+            u'private': u'bulk_update_private',
+            u'public': u'bulk_update_public',
+            u'delete': u'bulk_update_delete',
+        }
+
+        data_dict = {u'datasets': datasets, u'org_id': group_dict['id']}
+
+        try:
+            get_action(action_functions[action])(context, data_dict)
+        except NotAuthorized:
+            base.abort(403, _(u'Not authorized to perform bulk update'))
+        return h.redirect_to(u'{}.milestone'.format(group_type), id=id)
+
 
 class CreateGroupView(MethodView):
     u'''Create group view '''
@@ -1204,6 +1311,9 @@ def register_group_plugin_rules(blueprint):
     blueprint.add_url_rule(
         u'/bulk_process/<id>',
         view_func=BulkProcessView.as_view(str(u'bulk_process')))
+    blueprint.add_url_rule(
+        u'/milestone/<id>',
+        view_func=MilestoneView.as_view(str(u'milestone')))
     blueprint.add_url_rule(
         u'/delete/<id>',
         methods=[u'GET', u'POST'],

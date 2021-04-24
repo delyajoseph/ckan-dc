@@ -1,0 +1,23 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('Milestone') }} {{ g.template_title_delimiter }} {{ super() }}{% endblock %}
+
+
+
+{% block primary_content_inner %}
+<label>Milestone Details</label>
+  <table class="table table-header table-hover table-bordered">
+    <thead>
+      <tr>
+          <th>{{ _('Milestone Id') }}</th>
+          <th>{{ _('Due') }}</th>
+          <th>{{ _('Statement') }}</th> 
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+       
+      </tr>
+    </tbody>
+    </table>
+{% endblock %}
