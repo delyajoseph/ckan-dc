@@ -677,6 +677,31 @@ class GroupController(base.BaseController):
 
         return self._render_template('group/members.html', group_type)
 
+    def members(self, id):
+        log.info("##### CKAN getting members list............ controller > group.py")
+        group_type = self._ensure_controller_matches_group_type(id)
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user}
+
+        data_dict = {'id': id}
+        try:
+            check_access('group_edit_permissions', context, data_dict)
+        except NotAuthorized:
+            abort(403,
+                  _('User %r not authorized to edit members of %s') % (c.user,
+                                                                       id))
+        try:
+            c.members = self._action('member_list')(
+                context, {'id': id, 'object_type': 'user'}
+            )
+            data_dict['include_datasets'] = False
+            c.group_dict = self._action('group_show')(context, data_dict)
+        except NotFound:
+            abort(404, _('Group not found'))
+
+        return self._render_template('group/milestones.html', group_type)
+
     def member_new(self, id):
 
         log.info("#### CKAN controllers > group.py, is_keyresearcher: ")
