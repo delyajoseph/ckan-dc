@@ -2150,6 +2150,15 @@ def organizations_keyresearcher_available(group_id=None, include_dataset_count=F
     return logic.get_action('organization_keyresearcher_list')(context, data_dict)
 
 @core_helper
+def organizations_milestones_available():
+    '''Return a list of Milestone id available in this organizations that the current user has the specified
+    permission for.
+    '''
+    context = {'user': c.user}
+    data_dict = {}
+    return logic.get_action('milestone_show_all')(context, data_dict)
+
+@core_helper
 def roles_translated():
     '''Return a dict of available roles with their translations'''
     return authz.roles_trans()
@@ -2777,10 +2786,7 @@ def get_translated(data_dict, field):
         return _(val) if val and isinstance(val, string_types) else val
 
 
-@core_helper
-def milestone():
-    milestones = ['Milestone 1', 'Milestone 2', 'Milestone 3', 'Milestone 4', 'Milestone 5', 'Milestone 6', 'Milestone 7']
-    return milestones
+
 
     
 

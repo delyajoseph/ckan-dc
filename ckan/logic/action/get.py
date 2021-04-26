@@ -1328,6 +1328,23 @@ def _group_or_org_show(context, data_dict, is_org=False):
         group_plugin, context, group_dict, schema,
         'organization_show' if is_org else 'group_show')
     return group_dict
+
+
+def milestone_show_all(context, data_dict):
+    model= context['model']
+    query = model.Milestone.get_all()
+
+    milestone_list_all=[]
+    for mile in query.all():
+        result_dict = {}
+        for k in ['id', 'm_id', 'm_due', 'm_stmt','group_id']:
+            result_dict[k] = getattr(mile, k)
+        
+        milestone_list_all.append(result_dict)
+
+    return milestone_list_all
+
+
 def milestone_show(context, data_dict):
     log.info('#### milestone show')
     id = data_dict['id']
@@ -1345,6 +1362,7 @@ def milestone_show(context, data_dict):
         result_dict = {}
         for k in ['id', 'm_id', 'm_due', 'm_stmt']:
             result_dict[k] = getattr(milestone, k)
+            
         milestone_list.append(result_dict)
 
 

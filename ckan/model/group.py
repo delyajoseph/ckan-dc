@@ -83,6 +83,13 @@ class Milestone(core.StatefulObjectMixin,
         query = meta.Session.query(cls)
         query = query.filter(Milestone.group_id == id)
         return query
+    
+
+    @classmethod
+    def get_all(cls, context=None):
+        query = meta.Session.query(cls)
+        return query
+
 
 
 

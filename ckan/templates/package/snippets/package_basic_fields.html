@@ -75,6 +75,7 @@
   
   {% set organizations_available = h.organizations_available('create_dataset') %}
   {% set keyresearchers_available = h.organizations_keyresearcher_available(data.group_id) %}
+  
 
   {% set user_can_update_owner_org = h.can_update_owner_org(data, organizations_available) %}
   {% set user_is_sysadmin = h.check_access('sysadmin') %}
@@ -92,7 +93,7 @@
     <div class="form-group control-medium">
       <label for="field-organizations" class="control-label">{{ _('Projects') }}</label>
       <div class="controls">
-        <select id="field-organizations" name="owner_org"  class="form-control" onchange="update_key_researcher(this, null);update_ppt()">
+        <select id="field-organizations" name="owner_org"  class="form-control" onchange="update_key_researcher(this, null);update_ppt(); filter_milestone(this);">
           {% for organization in organizations_available %}
           {# get out first org from users list only if there is not an existing org #}
           {% set selected_org = (existing_org and existing_org == organization.id) %}

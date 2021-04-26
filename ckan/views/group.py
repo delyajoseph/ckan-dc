@@ -584,6 +584,7 @@ def milestones(id, group_type, is_organization):
         data_dict = {u'id': id}
         check_access(u'group_edit_permissions', context, data_dict)
         milestone_list = _action(u'milestone_show')(context, data_dict)
+        
         data_dict['include_datasets'] = False
         group_dict = _action(u'group_show')(context, data_dict)
     except NotFound:
