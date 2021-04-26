@@ -573,6 +573,9 @@ class DefaultOrganizationForm(DefaultGroupForm):
 
     def read_template(self):
         return 'organization/read.html'
+        
+    def milestone_template(self):
+        return 'organization/milestone.html'
 
     # don't override history_template - use group template for history
 

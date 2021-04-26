@@ -573,6 +573,39 @@ def members(id, group_type, is_organization):
     }
     return base.render(_replace_group_org(u'group/members.html'), extra_vars)
 
+def milestones(id, group_type, is_organization):
+
+    #log.info("##### CKAN getting members list............ views > group.py")
+    extra_vars = {}
+    set_org(is_organization)
+    context = {u'model': model, u'session': model.Session, u'user': g.user}
+
+    try:
+        data_dict = {u'id': id}
+        check_access(u'group_edit_permissions', context, data_dict)
+        milestone_list = _action(u'milestone_show')(context, data_dict)
+        
+        data_dict['include_datasets'] = False
+        group_dict = _action(u'group_show')(context, data_dict)
+    except NotFound:
+        base.abort(404, _(u'Group not found'))
+    except NotAuthorized:
+        base.abort(403,
+                   _(u'User %r not authorized to edit members of %s') %
+                   (g.user, id))
+
+    # TODO: Remove
+    # ckan 2.9: Adding variables that were removed from c object for
+    # compatibility with templates in existing extensions
+    g.milestone_list = milestone_list
+    g.group_dict = group_dict
+
+    extra_vars = {
+            u"group_dict": group_dict,
+            u"milestone_list": milestone_list,
+            u"group_type": group_type
+        }
+    return base.render(_replace_group_org(u'group/milestones.html'), extra_vars)
 
 def member_delete(id, group_type, is_organization):
     extra_vars = {}
@@ -1198,6 +1231,8 @@ def register_group_plugin_rules(blueprint):
     blueprint.add_url_rule(u'/about/<id>', methods=[u'GET'], view_func=about)
     blueprint.add_url_rule(
         u'/members/<id>', methods=[u'GET', u'POST'], view_func=members)
+    blueprint.add_url_rule(
+        u'/milestones/<id>', methods=[u'GET', u'POST'], view_func=milestones)
     blueprint.add_url_rule(
         u'/member_new/<id>',
         view_func=MembersGroupView.as_view(str(u'member_new')))

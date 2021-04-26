@@ -1330,6 +1330,52 @@ def _group_or_org_show(context, data_dict, is_org=False):
     return group_dict
 
 
+def milestone_show_all(context, data_dict):
+    model= context['model']
+    query = model.Milestone.get_all()
+
+    milestone_list_all=[]
+    for mile in query.all():
+        result_dict = {}
+        for k in ['id', 'm_id', 'm_due', 'm_stmt','group_id']:
+            result_dict[k] = getattr(mile, k)
+        
+        milestone_list_all.append(result_dict)
+
+    return milestone_list_all
+
+
+def milestone_show(context, data_dict):
+    log.info('#### milestone show')
+    id = data_dict['id']
+    log.info('#### milestone show1 %s' %(id))
+    model = context['model']
+    group = model.Group.get(id) 
+
+    log.info('#### milestone show2 groupid %s' %(group.id))
+    query = model.Milestone.get(group.id, context)
+    log.info('#### milestone show2 %s' %(id))
+
+
+    milestone_list = []
+    for milestone in query.all():   
+        result_dict = {}
+        for k in ['id', 'm_id', 'm_due', 'm_stmt']:
+            result_dict[k] = getattr(milestone, k)
+            
+        milestone_list.append(result_dict)
+
+
+     #for user in users_q:
+    #keylist.append({"id" : user.id, "name" : user.fullname, 
+    #    "organisation" : user.organisation, "contact" : user.contact, "email" : user.email})
+
+    log.info('### CKAN json milestone_list %s' % json.dumps(milestone_list))
+
+    return milestone_list
+
+
+
 def group_show(context, data_dict):
     '''Return the details of a group.
 

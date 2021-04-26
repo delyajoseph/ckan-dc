@@ -13,7 +13,7 @@ from ckan.model import user as _user
 
 __all__ = ['group_table', 'Group',
            'Member',
-           'member_table']
+           'member_table','Milestone', 'milestone_table']
 
 member_table = Table('member', meta.metadata,
                      Column('id', types.UnicodeText,
@@ -46,6 +46,7 @@ group_table = Table('group', meta.metadata,
                     Column('prjln', types.UnicodeText),
                     Column('prjlc', types.UnicodeText),
                     Column('prjle', types.UnicodeText),
+                    Column('abstract', types.UnicodeText),
                     Column('type', types.UnicodeText,
                            nullable=False),
                     Column('description', types.UnicodeText),
@@ -58,6 +59,38 @@ group_table = Table('group', meta.metadata,
                     Column('state', types.UnicodeText,
                            default=core.State.ACTIVE),
                     )
+milestone_table = Table('milestone', meta.metadata,
+                     Column('id', types.Integer,
+                            primary_key=True),
+                     Column('group_id', types.UnicodeText),
+                     Column('m_id', types.UnicodeText),
+                     Column('m_due', types.UnicodeText),
+                     Column('m_stmt', types.UnicodeText)
+                     )
+class Milestone(core.StatefulObjectMixin, 
+            domain_object.DomainObject):
+
+    def __init__(self, m_id=None, group_id=None,
+                 m_due=None, m_stmt=None):
+       self.m_id = m_id
+       self.group_id = group_id
+       self.m_due = m_due
+       self.m_stmt = m_stmt
+
+    @classmethod
+    def get(cls, id, context=None):
+
+        query = meta.Session.query(cls)
+        query = query.filter(Milestone.group_id == id)
+        return query
+    
+
+    @classmethod
+    def get_all(cls, context=None):
+        query = meta.Session.query(cls)
+        return query
+
+
 
 
 class Member(core.StatefulObjectMixin,
@@ -121,7 +154,7 @@ class Member(core.StatefulObjectMixin,
 class Group(core.StatefulObjectMixin,
             domain_object.DomainObject):
 
-    def __init__(self, name=u'', title=u'', pgmln=u'',pgmlc=u'',pgmle=u'', prjln=u'',prjlc=u'',prjle=u'',description=u'', image_url=u'',
+    def __init__(self, name=u'', title=u'', pgmln=u'',pgmlc=u'',pgmle=u'', prjln=u'',prjlc=u'',prjle=u'',description=u'',abstract=u'', image_url=u'',
                  type=u'group', approval_status=u'approved',
                  is_organization=False):
         self.name = name
@@ -133,6 +166,7 @@ class Group(core.StatefulObjectMixin,
         self.prjlc = prjlc
         self.prjle = prjle
         self.description = description
+        self.abstract = abstract
         self.image_url = image_url
         self.type = type
         self.approval_status = approval_status
@@ -160,6 +194,7 @@ class Group(core.StatefulObjectMixin,
         """
         Returns all groups.
         """
+        log.info('group type in group.py')
         q = meta.Session.query(cls)
         if state:
             q = q.filter(cls.state.in_(state))
@@ -362,6 +397,7 @@ class Group(core.StatefulObjectMixin,
         return '<Group %s>' % self.name
 
 meta.mapper(Group, group_table)
+meta.mapper(Milestone, milestone_table)
 
 meta.mapper(Member, member_table, properties={
     'group': orm.relation(Group,

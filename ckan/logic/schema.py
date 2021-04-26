@@ -264,6 +264,7 @@ def default_group_schema(
         'prjln': [ignore_missing, unicode_safe],
         'prjlc': [ignore_missing, unicode_safe],
         'prjle': [ignore_missing, unicode_safe],
+        'abstract': [ignore_missing, unicode_safe],
         'description': [ignore_missing, unicode_safe],
         'image_url': [ignore_missing, unicode_safe],
         'image_display_url': [ignore_missing, unicode_safe],
