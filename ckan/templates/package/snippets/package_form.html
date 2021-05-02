@@ -3,6 +3,7 @@
 {% macro sentence_case(text) %}
 {{ text[0]|upper}}{{text[1:] }}
 {% endmacro %}
+{% set desc_attrs= {'maxlength':'1400'}%}
 
 {# This provides a full page that renders a form for adding a dataset. It can
 then itself be extended to add/remove blocks of functionality. #}
@@ -115,16 +116,17 @@ then itself be extended to add/remove blocks of functionality. #}
   <div id="tab3">
 
     {% block basic_fields_dcm %}
-    {{ form.markdown('dcm', id='field-dcm', label=_('Data collection Methdology'), placeholder=_('Brief about data collection methodology(Max200 words)'), value=data.dcm, error=errors.dcm, classes=['control-full']) }}
+    
+    {{ form.markdown('dcm', id='field-dcm', label=_('Data collection Methdology'), placeholder=_('Brief about data collection methodology(Max200 words)'), attrs=desc_attrs, value=data.dcm, error=errors.dcm, classes=['control-full']) }}
     {% endblock %}
     {% block basic_fields_  %}
-    {{ form.markdown('dqam', id='field-dqam', label=_('Data QA or QC methodology'), placeholder=_('Eg Standards used, Calibration methods, Equipment maintenance, consistency and quality of data(Max 200 words)'), value=data.dqam, error=errors.dqam, classes=['control-full']) }}
+    {{ form.markdown('dqam', id='field-dqam', label=_('Data QA or QC methodology'), placeholder=_('Eg Standards used, Calibration methods, Equipment maintenance, consistency and quality of data(Max 200 words)'), attrs=desc_attrs,value=data.dqam, error=errors.dqam, classes=['control-full']) }}
     {% endblock %}
 
 
     {% block basic_fields_dataType %}
-   {# {% set existing_dataType = data.get('dataType') %}
-    {% set existing_dataTypeInfo = data.get('dataTypeInfo') %}
+    {% set existing_dataType = data.get('dataType') %}
+    {#{% set existing_dataTypeInfo = data.get('dataTypeInfo') %}
     {% set datatype_list = ['generic', 'softwareSpecific', 'prop'] %}#}
    
     {{ form.input('dataType', id='field-dataType', label=_('Data Type'), placeholder=_('Eg: pdf, csv, xlsx, jpeg, docs etc'), value=data.dataType, error=errors.dataType, classes=['control-full']) }}
