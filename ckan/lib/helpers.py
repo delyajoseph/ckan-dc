@@ -2150,7 +2150,7 @@ def organizations_keyresearcher_available(group_id=None, include_dataset_count=F
     return logic.get_action('organization_keyresearcher_list')(context, data_dict)
 
 @core_helper
-def organizations_milestones_available():
+def organizations_milestones_available(group_id=None):
     '''Return a list of Milestone id available in this organizations that the current user has the specified
     permission for.
     '''
