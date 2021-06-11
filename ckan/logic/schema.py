@@ -579,11 +579,22 @@ def default_follow_dataset_schema(
 def member_schema(
         ignore_missing, not_missing, group_id_or_name_exists, unicode_safe,
         user_id_or_name_exists, role_exists):
+    print('member schema is *************************')
     return {
         'id': [not_missing, group_id_or_name_exists, unicode_safe],
         'username': [not_missing, user_id_or_name_exists, unicode_safe],
         'role': [not_missing, role_exists, unicode_safe],
         'is_keyresearcher' : [ignore_missing]
+    }
+@validator_args
+def milestone_schema(
+        ignore_missing, not_missing
+        ):
+    return {
+        'm_id': [not_missing, ],
+        'm_stmt': [not_missing],
+        'm_due': [not_missing]
+        
     }
 
 

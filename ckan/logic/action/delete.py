@@ -6,6 +6,7 @@ import logging
 
 import sqlalchemy as sqla
 import six
+import json
 
 import ckan.lib.jobs as jobs
 import ckan.logic
@@ -291,6 +292,7 @@ def package_relationship_delete(context, data_dict):
     model.repo.commit()
 
 def member_delete(context, data_dict=None):
+    log.info('member delete in delete .py##################################')
     '''Remove an object (e.g. a user, dataset or group) from a group.
 
     You must be authorized to edit a group to remove objects from it.
@@ -326,6 +328,36 @@ def member_delete(context, data_dict=None):
             filter(model.Member.state    == 'active').first()
     if member:
         member.delete()
+        model.repo.commit()
+
+
+
+def milestone_delete(context, data_dict=None):
+
+    log.info('#### milestone_delete in delete.py ######## %s', json.dumps(data_dict))
+    model = context['model']
+  
+    
+    group_id=data_dict['group_id']
+    m_id=data_dict['m_id']
+    m_due=data_dict['m_due']
+
+    milestone = model.Milestone(
+                              group_id=group_id,
+                              m_id=m_id,
+                              m_due=m_due
+                              )
+   
+    log.info('########################### %s',(milestone))
+    
+    milestone = model.Session.query(model.Milestone).\
+            filter(model.Milestone.group_id == group_id).\
+            filter(model.Milestone.m_id == m_id).\
+            filter(model.Milestone.m_due == m_due).first()
+
+    if milestone:
+        model.Session.delete(milestone)
+        #milestone.delete()
         model.repo.commit()
 
 
@@ -721,9 +753,23 @@ def unfollow_dataset(context, data_dict):
             ckan.logic.schema.default_follow_dataset_schema())
     _unfollow(context, data_dict, schema,
             context['model'].UserFollowingDataset)
+def _group_or_org_milestone_delete(context, data_dict=None):
+    log.info('########################################333333333333333333333')
+    model = context['model']
+    user = context['user']
+    session = context['session']
+
+    milestone_context = {
+        'model': model,
+        'user': user,
+        'session': session
+    }
+    _get_action('milestone_delete')(milestone_context, data_dict)
+
 
 
 def _group_or_org_member_delete(context, data_dict=None):
+    log.info('########################################333333333333333333333')
     model = context['model']
     user = context['user']
     session = context['session']
@@ -745,6 +791,7 @@ def _group_or_org_member_delete(context, data_dict=None):
     _get_action('member_delete')(member_context, member_dict)
 
 
+
 def group_member_delete(context, data_dict=None):
     '''Remove a user from a group.
 
@@ -756,8 +803,24 @@ def group_member_delete(context, data_dict=None):
     :type username: string
 
     '''
+    log.info('########################222222222222222222222222222222')
     _check_access('group_member_delete',context, data_dict)
     return _group_or_org_member_delete(context, data_dict)
+
+def organization_milestone_delete(context, id):
+    '''Remove a user from a group.
+
+    You must be authorized to edit the group.
+
+    :param id: the id or name of the group
+    :type id: string
+    :param username: name or id of the user to be removed
+    :type username: string
+
+    '''
+    log.info('########################222222222222222222222222222222')
+    
+    return _group_or_org_milestone_delete(context, id)
 
 def organization_member_delete(context, data_dict=None):
     '''Remove a user from an organization.

@@ -556,6 +556,29 @@ def package_relationship_create(context, data_dict):
     relationship_dicts = rel.as_dict(ref_package_by=ref_package_by)
     return relationship_dicts
 
+#############################################################################3
+
+def milestone_create(context, data_dict=None):
+
+    model = context['model']
+
+    id, m_id, m_due, m_stmt = _get_or_bust(
+        data_dict,
+        ['id','milestone_id', 'milestone_due', 'milestone_stmt']
+    )
+
+    milestone = model.Milestone(
+                              group_id=id,
+                              m_id=m_id,
+                              m_due=m_due,
+                              m_stmt=m_stmt
+                              )
+    
+    model.Session.add(milestone)
+    model.repo.commit()
+
+    return model_dictize.milestone_dictize(milestone, context)
+########################################################################3
 
 def member_create(context, data_dict=None):
     '''Make an object (e.g. a user, dataset or group) a member of a group.
@@ -1176,6 +1199,7 @@ def user_invite(context, data_dict):
                                                       {'id': data['group_id']})
     else:
         _get_action('group_member_create')(context, member_dict)
+       
         group_dict = _get_action('group_show')(context,
                                                {'id': data['group_id']})
     try:
@@ -1509,6 +1533,24 @@ def _group_or_org_member_create(context, data_dict, is_org=False):
                                              member_dict)
 
 
+def  _group_or_org_milestone_create(context, data_dict, is_org=False):
+
+    model = context['model']
+    user = context['user']
+    session = context['session']
+
+    schema = ckan.logic.schema.milestone_schema()
+    
+    milestone_create_context = {
+        'model': model,
+        'user': user,
+        'session': session,
+        'ignore_auth': context.get('ignore_auth'),
+    }
+    return logic.get_action('milestone_create')(milestone_create_context,
+                                             data_dict)
+
+
 def group_member_create(context, data_dict):
     '''Make a user a member of a group.
 
@@ -1527,6 +1569,11 @@ def group_member_create(context, data_dict):
     '''
     _check_access('group_member_create', context, data_dict)
     return _group_or_org_member_create(context, data_dict)
+
+def group_milestone_create(context, data_dict):
+    
+    #_check_access('group_member_create', context, data_dict)
+    return _group_or_org_milestone_create(context, data_dict)
 
 
 def organization_member_create(context, data_dict):
@@ -1548,6 +1595,26 @@ def organization_member_create(context, data_dict):
     '''
     _check_access('organization_member_create', context, data_dict)
     return _group_or_org_member_create(context, data_dict, is_org=True)
+
+def organization_milestone_create(context, data_dict):
+    '''Make a user a member of an organization.
+
+    You must be authorized to edit the organization.
+
+    :param id: the id or name of the organization
+    :type id: string
+    :param username: name or id of the user to be made member of the
+        organization
+    :type username: string
+    :param role: role of the user in the organization. One of ``member``,
+        ``editor``, or ``admin``
+    :type role: string
+
+    :returns: the newly created (or updated) membership
+    :rtype: dictionary
+    '''
+    #_check_access('organization_milestone_create', context, data_dict)
+    return _group_or_org_milestone_create(context, data_dict, is_org=True)
 
 
 def follow_group(context, data_dict):

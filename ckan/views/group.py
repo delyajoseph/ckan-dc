@@ -3,6 +3,7 @@
 import logging
 import re
 from collections import OrderedDict
+import json
 
 import six
 from six import string_types
@@ -71,11 +72,13 @@ def _replace_group_org(string):
     u''' substitute organization for group if this is an org'''
     if is_org:
         return re.sub(u'^group', u'organization', string)
+        log.info('string for mile stone is')
     return string
 
 
 def _action(action_name):
     u''' select the correct group/org action '''
+
     return get_action(_replace_group_org(action_name))
 
 
@@ -587,11 +590,12 @@ def milestones(id, group_type, is_organization):
         
         data_dict['include_datasets'] = False
         group_dict = _action(u'group_show')(context, data_dict)
+
     except NotFound:
         base.abort(404, _(u'Group not found'))
     except NotAuthorized:
         base.abort(403,
-                   _(u'User %r not authorized to edit members of %s') %
+                   _(u'User %r not authorized to edit milestone of %s') %
                    (g.user, id))
 
     # TODO: Remove
@@ -599,6 +603,7 @@ def milestones(id, group_type, is_organization):
     # compatibility with templates in existing extensions
     g.milestone_list = milestone_list
     g.group_dict = group_dict
+    #log.info('########################### %s',json.dumps(group_dict))
 
     extra_vars = {
             u"group_dict": group_dict,
@@ -608,6 +613,7 @@ def milestones(id, group_type, is_organization):
     return base.render(_replace_group_org(u'group/milestones.html'), extra_vars)
 
 def member_delete(id, group_type, is_organization):
+    log.info('11111111111111111@@@@@@@@@@@@@@@@@@member delete@@@@@@@@@@@@@@@@ group views')
     extra_vars = {}
     set_org(is_organization)
     if u'cancel' in request.params:
@@ -650,6 +656,30 @@ def member_delete(id, group_type, is_organization):
     return base.render(_replace_group_org(u'group/confirm_delete_member.html'),
                        extra_vars)
 
+def milestone_delete(id, is_organization,group_type):
+    log.info('###################milestone delete view@@@@@@@@@@@@@@@')
+    
+
+   
+    set_org(is_organization)
+    context = {u'model': model, u'session': model.Session, u'user': g.user}
+    try:
+        
+        group_id = request.params.get(u'group_id')
+        m_id = request.params.get(u'm_id')    
+        m_due = request.params.get(u'm_due')
+        _action(u'organization_milestone_delete')(context, {
+            u'id': id,
+            u'group_id' : group_id,
+            u'm_id' : m_id,
+            u'm_due' : m_due
+        })
+        
+           
+    except NotFound:
+        base.abort(404, _(u'Group not found'))
+    
+    return milestones(group_id,group_type,is_organization)
 
 # deprecated
 def history(id, group_type, is_organization):
@@ -1109,6 +1139,65 @@ class DeleteGroupView(MethodView):
                            extra_vars)
 
 
+
+
+class MilestoneGroupView(MethodView):
+    u'''New milestones group view'''
+
+    def _prepare(self, id=None):
+        context = {
+            u'model': model,
+            u'session': model.Session,
+            u'user': g.user
+        }
+        
+        return context
+
+    def get(self, group_type, is_organization, id=None):
+        extra_vars = {}
+        set_org(is_organization)
+        context = self._prepare(id)
+        user = request.params.get(u'user')
+        data_dict = {u'id': id}
+        data_dict['include_datasets'] = False
+        group_dict = _action(u'group_show')(context, data_dict)
+        roles = _action(u'member_roles_list')(context, {
+            u'group_type': group_type
+        })
+        
+
+        # TODO: Remove
+        g.group_dict = group_dict
+        
+
+       
+        return base.render(_replace_group_org(u'group/milestone_new.html'),
+                           extra_vars)
+
+    def post(self, group_type, is_organization, id=None):
+        
+        context = self._prepare(id)
+        data_dict = clean_dict(
+
+        dict_fns.unflatten(tuplize_dict(parse_params(request.form))))
+        data_dict['id'] = id
+                
+        try:
+            group_dict = _action(u'group_milestone_create')(context, data_dict)
+         
+        except NotFound:
+            base.abort(404, _(u'Group not found'))
+        except ValidationError as e:
+            h.flash_error(e.error_summary)
+            return h.redirect_to(u'{}.milestone_new', id=id)
+
+        # TODO: Remove
+        g.group_dict = group_dict
+
+        return milestones(id,group_type,is_organization)
+
+
+
 class MembersGroupView(MethodView):
     u'''New members group view'''
 
@@ -1215,7 +1304,7 @@ organization = Blueprint(u'organization', __name__,
 
 def register_group_plugin_rules(blueprint):
     actions = [
-        u'member_delete', u'history', u'followers', u'follow',
+        u'member_delete',u'milestone_delete', u'history', u'followers', u'follow',
         u'unfollow', u'admins', u'activity'
     ]
     blueprint.add_url_rule(u'/', view_func=index, strict_slashes=False)
@@ -1233,6 +1322,11 @@ def register_group_plugin_rules(blueprint):
         u'/members/<id>', methods=[u'GET', u'POST'], view_func=members)
     blueprint.add_url_rule(
         u'/milestones/<id>', methods=[u'GET', u'POST'], view_func=milestones)
+    
+    blueprint.add_url_rule(
+        u'/milestone_new/<id>',
+        view_func=MilestoneGroupView.as_view(str(u'milestone_new')))
+
     blueprint.add_url_rule(
         u'/member_new/<id>',
         view_func=MembersGroupView.as_view(str(u'member_new')))
