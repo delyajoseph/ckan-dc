@@ -603,7 +603,7 @@ def milestones(id, group_type, is_organization):
     # compatibility with templates in existing extensions
     g.milestone_list = milestone_list
     g.group_dict = group_dict
-    #log.info('########################### %s',json.dumps(group_dict))
+    log.info('########################### %s',json.dumps(group_dict))
 
     extra_vars = {
             u"group_dict": group_dict,
@@ -1154,10 +1154,11 @@ class MilestoneGroupView(MethodView):
         return context
 
     def get(self, group_type, is_organization, id=None):
-        extra_vars = {}
+        
         set_org(is_organization)
         context = self._prepare(id)
         user = request.params.get(u'user')
+        
         data_dict = {u'id': id}
         data_dict['include_datasets'] = False
         group_dict = _action(u'group_show')(context, data_dict)
@@ -1165,12 +1166,14 @@ class MilestoneGroupView(MethodView):
             u'group_type': group_type
         })
         
-
         # TODO: Remove
         g.group_dict = group_dict
-        
+        extra_vars = {
+            u"group_dict": group_dict,
+            u"roles": roles,
+            u"group_type": group_type
+        }
 
-       
         return base.render(_replace_group_org(u'group/milestone_new.html'),
                            extra_vars)
 

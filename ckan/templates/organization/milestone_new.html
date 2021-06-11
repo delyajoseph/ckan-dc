@@ -4,11 +4,11 @@
 
 {% set user = user_dict %}
 
-{% block subtitle %}{{ _('Edit Milestone') if user else _('Add Milestone') }} {{ g.template_title_delimiter }} {{ super() }}{% endblock %}
+
 
 {% block primary_content_inner %}
   
-  <h1 class="page-heading">
+ <h1 class="page-heading">
     {% block page_heading %}{{ _('Edit Milestone') if user else _('Add Milestone') }}{% endblock %}
   </h1>
   {% block form %}
