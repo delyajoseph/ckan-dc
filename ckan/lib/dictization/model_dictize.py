@@ -482,6 +482,11 @@ def user_list_dictize(obj_list, context,
 def member_dictize(member, context):
     return d.table_dictize(member, context)
 
+
+def milestone_dictize(milestone, context):
+    return d.table_dictize(milestone, context)
+
+
 def user_dictize(
         user, context, include_password_hash=False,
         include_plugin_extras=False):

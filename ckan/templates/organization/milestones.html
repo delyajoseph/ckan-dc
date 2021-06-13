@@ -1,14 +1,14 @@
 {% extends "organization/edit_base.html" %}
 
 {% block subtitle %}{{ _('Milestones') }} {{ g.template_title_delimiter }} {{ super() }}{% endblock %}
-{#
+
 {% block page_primary_action %}
   {% if h.check_access('organization_update', {'id': organization.id}) %}
 
-    {% link_for _('Add Milestone'), named_route=group_type+'.milestone_new', id=group_dict.id, class_='btn btn-primary', icon='plus-square' %}
+    {% link_for _('Add Milestone'), named_route=group_type+'.milestone_new', id=organization.id, class_='btn btn-primary', icon='plus-square' %}
   {% endif %}
 {% endblock %}
-#}
+
 {% block primary_content_inner %}
   <table class="table table-header table-hover table-bordered">
     <thead>
@@ -16,6 +16,8 @@
           <th>{{ _('Milestone Id') }}</th>
           <th>{{ _('Due') }}</th>
           <th>{{ _('Statement') }}</th>
+          <th>{{_('')}}</th>
+         
          
       </tr>
     </thead>
@@ -27,13 +29,7 @@
           <td>{{ ms.m_due }}</td>
           <td>{{ ms.m_stmt }}</td>
           
-           <!---- <div class="btn-group pull-right">
-                <a class="btn btn-default btn-sm" href="{{ h.url_for(group_type + '.member_new', id=group_dict.id, user=user_id) }}" title="{{ _('Edit') }}">
-                <i class="fa fa-wrench"></i>
-              </a>
-              <a class="btn btn-danger btn-sm" href="{{ h.url_for(group_type + '.member_delete', id=group_dict.id, user=user_id) }}" data-module="confirm-action" data-module-content="{{ _('Are you sure you want to delete this member?') }}" title="{{ _('Delete') }}">{% block delete_button_text %}<i class="fa fa-times"></i>{% endblock %}</a>
-            </div>-->
-          
+           <td><a class="btn btn-danger btn-sm" href="{{ h.url_for(group_type + '.milestone_delete', group_id=ms.group_id, id=ms.id, m_id=ms.m_id, m_due=ms.m_due) }}"  title="{{ _('Delete') }}">{% block delete_button_text %}<i class="fa fa-times"></i>{% endblock %}</a></td>
         </tr>
       {% endfor %}
     </tbody>
