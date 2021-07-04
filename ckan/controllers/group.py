@@ -681,8 +681,6 @@ class GroupController(base.BaseController):
 
     def member_new(self, id):
 
-        log.info("#### CKAN controllers > group.py, is_keyresearcher: ")
-                
         group_type = self._ensure_controller_matches_group_type(id)
 
         context = {'model': model, 'session': model.Session,
@@ -707,6 +705,8 @@ class GroupController(base.BaseController):
 
                 email = data_dict.get('email')
                 is_keyresearcher = data_dict.get('is_keyresearcher')
+                is_project_leader = data_dict.get('is_project_leader')
+                is_program_leader = data_dict.get('is_program_leader')
 
                 #log.info('#### CKAN controllers > group.py, is_keyresearcher: "%s"' % is_keyresearcher)
                 if email:
@@ -714,7 +714,9 @@ class GroupController(base.BaseController):
                         'email': email,
                         'group_id': data_dict['id'],
                         'role': data_dict['role'],
-                        'is_keyresearcher': is_keyresearcher
+                        'is_keyresearcher': is_keyresearcher,
+                        'is_project_leader': is_project_leader,
+                        'is_program_leader' : is_program_leader
                     }
                     del data_dict['email']
                     user_dict = self._action('user_invite')(

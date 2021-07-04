@@ -605,8 +605,8 @@ def member_create(context, data_dict=None):
     model = context['model']
     user = context['user']
 
-    group_id, obj_id, obj_type, capacity, is_keyresearcher = \
-        _get_or_bust(data_dict, ['id', 'object', 'object_type', 'capacity', 'is_keyresearcher'])
+    group_id, obj_id, obj_type, capacity, is_keyresearcher, is_project_leader, is_program_leader = \
+        _get_or_bust(data_dict, ['id', 'object', 'object_type', 'capacity', 'is_keyresearcher', 'is_project_leader', 'is_program_leader'])
 
     group = model.Group.get(group_id)
     if not group:
@@ -638,7 +638,9 @@ def member_create(context, data_dict=None):
                               table_id=obj.id,
                               group_id=group.id,
                               state='active',
-                              is_keyresearcher=is_keyresearcher)
+                              is_keyresearcher=is_keyresearcher,
+                              is_project_leader=is_project_leader,
+                              is_program_leader=is_program_leader)
         member.group = group
     
     member.capacity = capacity
@@ -815,7 +817,10 @@ def _group_or_org_create(context, data_dict, is_org=False):
         'object': user_id,
         'object_type': 'user',
         'capacity': 'admin',
-        'is_keyresearcher' : False
+        'is_keyresearcher' : False,
+        'is_project_leader' : False,
+        'is_program_leader' : False,
+
     }
     member_create_context = {
         'model': model,
@@ -1503,6 +1508,8 @@ def _group_or_org_member_create(context, data_dict, is_org=False):
     role = data_dict.get('role')
     group_id = data_dict.get('id')
     is_keyresearcher = data_dict.get('is_keyresearcher')
+    is_project_leader = data_dict.get('is_project_leader')
+    is_program_leader = data_dict.get('is_program_leader')
 
     #log.info('### CKAN action > create.py > _group_or_org_member_create %s' % is_keyresearcher)
     group = model.Group.get(group_id)
@@ -1521,7 +1528,9 @@ def _group_or_org_member_create(context, data_dict, is_org=False):
         'object': user_id,
         'object_type': 'user',
         'capacity': role,
-        'is_keyresearcher': is_keyresearcher
+        'is_keyresearcher': is_keyresearcher,
+        'is_program_leader' : is_program_leader,
+        'is_project_leader' : is_project_leader
     }
     member_create_context = {
         'model': model,

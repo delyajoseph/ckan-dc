@@ -30,6 +30,9 @@ member_table = Table('member', meta.metadata,
                      Column('state', types.UnicodeText,
                             default=core.State.ACTIVE),
                      Column('is_keyresearcher', types.Boolean, default=False),
+                     Column('is_project_leader', types.Boolean, default=False),
+                     Column('is_program_leader', types.Boolean, default=False),
+                     
                      )
 
 
@@ -110,7 +113,8 @@ class Member(core.StatefulObjectMixin,
                  - capacity is 'parent'
     '''
     def __init__(self, group=None, table_id=None, group_id=None,
-                 table_name=None, capacity='public', state='active', is_keyresearcher=None):
+                 table_name=None, capacity='public', state='active', 
+                 is_keyresearcher=None, is_program_leader=None, is_project_leader=None):
         self.group = group
         self.group_id = group_id
         self.table_id = table_id
@@ -118,6 +122,8 @@ class Member(core.StatefulObjectMixin,
         self.capacity = capacity
         self.state = state
         self.is_keyresearcher = is_keyresearcher
+        self.is_program_leader = is_program_leader
+        self.is_project_leader = is_project_leader
 
     @classmethod
     def get(cls, reference):

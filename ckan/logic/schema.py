@@ -584,7 +584,9 @@ def member_schema(
         'id': [not_missing, group_id_or_name_exists, unicode_safe],
         'username': [not_missing, user_id_or_name_exists, unicode_safe],
         'role': [not_missing, role_exists, unicode_safe],
-        'is_keyresearcher' : [ignore_missing]
+        'is_keyresearcher' : [ignore_missing],
+        'is_project_leader' : [ignore_missing],
+        'is_program_leader' : [ignore_missing]
     }
 @validator_args
 def milestone_schema(

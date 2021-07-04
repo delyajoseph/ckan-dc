@@ -29,7 +29,7 @@
           <td>{{ ms.m_due }}</td>
           <td>{{ ms.m_stmt }}</td>
           
-           <td><a class="btn btn-danger btn-sm" href="{{ h.url_for(group_type + '.milestone_delete', group_id=ms.group_id, id=ms.id, m_id=ms.m_id, m_due=ms.m_due) }}"  title="{{ _('Delete') }}">{% block delete_button_text %}<i class="fa fa-times"></i>{% endblock %}</a></td>
+           <td><a class="btn btn-danger btn-sm" href="{{ h.url_for(group_type + '.milestone_delete', group_id=ms.group_id, id=ms.id, m_id=ms.m_id, m_due=ms.m_due) }}"  title="{{ _('Delete') }}">{% block delete_button_text %}Delete{% endblock %}</a></td>
         </tr>
       {% endfor %}
     </tbody>
