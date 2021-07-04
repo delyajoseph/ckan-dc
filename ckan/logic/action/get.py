@@ -232,7 +232,7 @@ def member_list(context, data_dict=None):
         except KeyError:
             return capacity
 
-    return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.is_keyresearcher)
+    return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.is_keyresearcher, m.is_project_leader, m.is_program_leader)
             for m in q.all()]
 
 
@@ -632,7 +632,7 @@ def group_list_authz(context, data_dict):
     group_list = model_dictize.group_list_dictize(groups, context)
     return group_list
 
-def keyresearcher_info(context,id):
+def project_member_info(context,id):
 
     model = context['model']
     user = context['user']
@@ -647,28 +647,38 @@ def keyresearcher_info(context,id):
     q = model.Session.query(model.Member) \
         .filter(model.Member.table_name == 'user') \
         .filter(model.Member.state == 'active') \
-        .filter(model.Member.is_keyresearcher == 'True') \
         .filter(model.Member.group_id == group_id) \
     
-    
-
-    keyresearcher_ids = set()
+    project_member_ids = set()
+    project_members = {}
     for member in q.all():
-        keyresearcher_ids.add(member.table_id)
+        project_member_ids.add(member.table_id)
+        project_members[member.table_id] = {
+            "is_keyresearcher" : member.is_keyresearcher,
+            "is_project_leader" : member.is_project_leader,
+            "is_program_leader" : member.is_program_leader
+        }
 
 
-    if not keyresearcher_ids:
+    if not project_member_ids:
         return []
 
     users_q = model.Session.query(model.User) \
         .filter(model.User.state == 'active')
 
-    users_q = users_q.filter(model.User.id.in_(keyresearcher_ids))
+    users_q = users_q.filter(model.User.id.in_(project_member_ids))
         
     keylist = [] 
     for user in users_q:
+        memberInfo = project_members[user.id]
+
+        log.info('########################### memberInfo:  %s',json.dumps(memberInfo))
+
+
         keylist.append({"id" : user.id, "name" : user.fullname, 
-        "organisation" : user.organisation, "contact" : user.contact, "email" : user.email})
+        "organisation" : user.organisation, "contact" : user.contact, 
+        "email" : user.email, "is_keyresearcher": memberInfo['is_keyresearcher'],
+        "is_project_leader" : memberInfo['is_project_leader'], "is_program_leader": memberInfo['is_program_leader']})
     
     #log.info('### CKAN json keyre %s' % json.dumps(keylist))
 
@@ -714,11 +724,12 @@ def organization_keyresearcher_list(context, data_dict):
         .filter(model.Member.group_id.in_(loginUserId_Groups))
 
     keyresearcher_ids = set()
-    keyresearchers_list = {}
+   
     kr_grp_dict = dict()
     for member in q.all():
         keyresearcher_ids.add(member.table_id)
-        kr_grp_dict[member.table_id] = member.group_id
+        group_key = member.table_id+ '###' +member.group_id
+        kr_grp_dict[group_key] = group_key
 
 
     if not keyresearcher_ids:
@@ -727,8 +738,13 @@ def organization_keyresearcher_list(context, data_dict):
     users_q = users_q.filter(model.User.id.in_(keyresearcher_ids))
         
     keylist = [] 
+
     for user in users_q:
-        keylist.append({"id" : user.id, "name" : user.fullname, "organisation" : user.organisation, "group_id" : kr_grp_dict.pop(user.id)})
+        for groupId in loginUserId_Groups:
+            group_key = user.id + '###' + groupId
+            user_group_id = kr_grp_dict.pop(group_key, None)
+            if user_group_id is not None :
+                keylist.append({"id" : user.id, "name" : user.fullname, "organisation" : user.organisation, "group_id" : groupId})
     
     #log.info('### CKAN json keyre %s' % json.dumps(keylist))
 

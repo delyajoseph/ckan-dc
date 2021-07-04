@@ -381,7 +381,7 @@ def _update_facet_titles(facets, group_type):
     return facets
 
 
-def _get_researcher_dict(id):
+def _get_project_member_dict(id):
     context = {
         u'model': model,
         u'session': model.Session,
@@ -389,7 +389,7 @@ def _get_researcher_dict(id):
         u'for_view': True
     }
     try:
-        return _action(u'keyresearcher_info')(context, id)
+        return _action(u'project_member_info')(context, id)
     except (NotFound, NotAuthorized):
         base.abort(404, _(u'Group not found'))
 
@@ -521,7 +521,7 @@ def about(id, group_type, is_organization):
     group_dict = _get_group_dict(id, group_type)
 
     #log.info("### CKAN views group.py ---> about, id %s" %id)
-    keyresearcher_list = _get_researcher_dict(id)
+    project_member_list = _get_project_member_dict(id)
 
     group_type = group_dict['type']
     _setup_template_variables(context, {u'id': id}, group_type=group_type)
@@ -534,7 +534,7 @@ def about(id, group_type, is_organization):
 
     extra_vars = {u"group_dict": group_dict,
                   u"group_type": group_type,
-                  u"key_reseachers" : keyresearcher_list}
+                  u"project_members" : project_member_list}
 
     return base.render(
         _get_group_template(u'about_template', group_type), extra_vars)
@@ -1231,6 +1231,12 @@ class MembersGroupView(MethodView):
         email = data_dict.get(u'email')
         is_keyresearcher = data_dict.get(u'is_keyresearcher') != None
         data_dict['is_keyresearcher'] = is_keyresearcher
+
+        is_project_leader = data_dict.get(u'is_project_leader') != None
+        data_dict['is_project_leader'] = is_project_leader
+
+        is_program_leader = data_dict.get(u'is_program_leader') != None
+        data_dict['is_program_leader'] = is_program_leader
         
         #log.info('#### CKAN views > group.py, is_keyresearcher: %s' % is_keyresearcher)
                 
@@ -1239,7 +1245,9 @@ class MembersGroupView(MethodView):
                 u'email': email,
                 u'group_id': data_dict['id'],
                 u'role': data_dict['role'],
-                u'is_keyresearcher': is_keyresearcher
+                u'is_keyresearcher': is_keyresearcher,
+                u'is_project_leader': is_project_leader,
+                u'is_program_leader': is_program_leader
             }
             del data_dict['email']
             user_dict = _action(u'user_invite')(context, user_data_dict)
