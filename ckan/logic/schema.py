@@ -258,12 +258,6 @@ def default_group_schema(
         'name': [
             not_empty, unicode_safe, name_validator, group_name_validator],
         'title': [ignore_missing, unicode_safe],
-        'pgmln': [ignore_missing, unicode_safe],
-        'pgmlc': [ignore_missing, unicode_safe],
-        'pgmle': [ignore_missing, unicode_safe],
-        'prjln': [ignore_missing, unicode_safe],
-        'prjlc': [ignore_missing, unicode_safe],
-        'prjle': [ignore_missing, unicode_safe],
         'abstract': [ignore_missing, unicode_safe],
         'description': [ignore_missing, unicode_safe],
         'image_url': [ignore_missing, unicode_safe],

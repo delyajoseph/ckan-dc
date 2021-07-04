@@ -43,12 +43,6 @@ group_table = Table('group', meta.metadata,
                     Column('name', types.UnicodeText,
                            nullable=False, unique=True),
                     Column('title', types.UnicodeText),
-                    Column('pgmln', types.UnicodeText),
-                    Column('pgmlc', types.UnicodeText),
-                    Column('pgmle', types.UnicodeText),
-                    Column('prjln', types.UnicodeText),
-                    Column('prjlc', types.UnicodeText),
-                    Column('prjle', types.UnicodeText),
                     Column('abstract', types.UnicodeText),
                     Column('type', types.UnicodeText,
                            nullable=False),
@@ -160,17 +154,11 @@ class Member(core.StatefulObjectMixin,
 class Group(core.StatefulObjectMixin,
             domain_object.DomainObject):
 
-    def __init__(self, name=u'', title=u'', pgmln=u'',pgmlc=u'',pgmle=u'', prjln=u'',prjlc=u'',prjle=u'',description=u'',abstract=u'', image_url=u'',
+    def __init__(self, name=u'', title=u'',description=u'',abstract=u'', image_url=u'',
                  type=u'group', approval_status=u'approved',
                  is_organization=False):
         self.name = name
         self.title = title
-        self.pgmln = pgmln
-        self.pgmlc = pgmlc
-        self.pgmle = pgmle
-        self.prjln = prjln
-        self.prjlc = prjlc
-        self.prjle = prjle
         self.description = description
         self.abstract = abstract
         self.image_url = image_url
